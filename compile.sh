@@ -1,6 +1,22 @@
 #!/usr/bin/env zsh
 
-for fic in **/*.md(.); do
+if (($#==0)); then
+    filelist=( **/*.md(.) )
+else
+    filelist=( $* )
+fi
+
+# init colors
+autoload colors
+colors
+for COLOR in RED GREEN YELLOW BLUE MAGENTA CYAN BLACK WHITE; do
+    eval $COLOR='$fg_no_bold[${(L)COLOR}]'
+    eval BOLD_$COLOR='$fg_bold[${(L)COLOR}]'
+done
+eval RESET='$reset_color'
+
+for fic in $filelist; do
+    print -- "-- ${YELLOW}$fic${RESET} --"
     print -n -- ${fic:r}.html
     prefix=$(print -- $fic|perl -pe 's#[^/]*/#../#g;s#[^/]*$##')
     pandoc -s -S --toc --css "${prefix}styling.css" \
@@ -9,19 +25,34 @@ for fic in **/*.md(.); do
         --smart --to=html5 -A footer.html \
         -o "${fic:r}.html" \
         $fic
-    print " [DONE]"
+    print " ${GREEN}[DONE]${RESET}"
 
     print -n -- ${fic:r}.pdf
+    # --variable mainfont="Hoefler Text" \
+    # --variable sansfont="Futura" \
+    # --variable monofont="Menlo" \
     pandoc -s -S -N --toc \
         --template=template.latex \
-        --variable mainfont="Hoefler Text" \
-        --variable sansfont="Futura" \
-        --variable monofont="Menlo" \
         --variable fontsize=14pt \
         --variable linkcolor=orange \
         --variable urlcolor=orange \
         --latex-engine=xelatex \
         -o ${fic:r}.pdf \
         $fic
-    print " [DONE]"
+    print " ${GREEN}[DONE]${RESET}"
+
+    print -n -- ${fic:r}-pres.pdf
+    slide_level=$(perl -ne 'if (/^slide_level: (.*)/) { print $1."\n"; }' <$fic)
+    if [[ $slide_level = "" ]]; then slide_level=1 fi
+    pandoc -s -S -N \
+        -t beamer \
+        --slide-level=$slide_level \
+        --variable fontsize=14pt \
+        --variable linkcolor=orange \
+        --variable urlcolor=orange \
+        --latex-engine=xelatex \
+        -o ${fic:r}-pres.pdf \
+        $fic
+    print " ${GREEN}[DONE]${RESET}"
+    print
 done
