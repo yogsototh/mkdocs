@@ -21,7 +21,7 @@ for src in $filelist; do
     fic=${src:t}
     print -- "-- ${YELLOW}$src${RESET} --"
     print -n -- ${src:r}.html
-    prefix=$(print -- $fic|perl -pe 's#[^/]*/#../#g;s#[^/]*$##')
+    prefix=$(print -- $src|perl -pe 's#[^/]*/#../#g;s#[^/]*$##')
     pandoc -s -S --toc --css "${prefix}styling.css" \
         -V lang=en \
         -V highlighting-css= --mathjax \
