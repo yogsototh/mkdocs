@@ -15,24 +15,27 @@ for COLOR in RED GREEN YELLOW BLUE MAGENTA CYAN BLACK WHITE; do
 done
 eval RESET='$reset_color'
 
-for fic in $filelist; do
-    print -- "-- ${YELLOW}$fic${RESET} --"
-    print -n -- ${fic:r}.html
+mainDir=$PWD
+for src in $filelist; do
+    cd ${src:h}
+    fic=${src:t}
+    print -- "-- ${YELLOW}$src${RESET} --"
+    print -n -- ${src:r}.html
     prefix=$(print -- $fic|perl -pe 's#[^/]*/#../#g;s#[^/]*$##')
     pandoc -s -S --toc --css "${prefix}styling.css" \
         -V lang=en \
         -V highlighting-css= --mathjax \
-        --smart --to=html5 -A footer.html \
+        --smart --to=html5 -A ${mainDir}/footer.html \
         -o "${fic:r}.html" \
         $fic
     print " ${GREEN}[DONE]${RESET}"
 
-    print -n -- ${fic:r}.pdf
+    print -n -- ${src:r}.pdf
     # --variable mainfont="Hoefler Text" \
     # --variable sansfont="Futura" \
     # --variable monofont="Menlo" \
     pandoc -s -S -N --toc \
-        --template=template.latex \
+        --template=${mainDir}/template.latex \
         --variable fontsize=14pt \
         --variable linkcolor=orange \
         --variable urlcolor=orange \
@@ -41,7 +44,7 @@ for fic in $filelist; do
         $fic
     print " ${GREEN}[DONE]${RESET}"
 
-    print -n -- ${fic:r}-pres.pdf
+    print -n -- ${src:r}-pres.pdf
     slide_level=$(perl -ne 'if (/^slide_level: (.*)/) { print $1."\n"; }' <$fic)
     if [[ $slide_level = "" ]]; then slide_level=1 fi
     pandoc -s -S -N \
@@ -55,4 +58,5 @@ for fic in $filelist; do
         $fic
     print " ${GREEN}[DONE]${RESET}"
     print
+    cd $mainDir
 done
