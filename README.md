@@ -12,8 +12,8 @@ Just launch.
 
 ## Dependencies
 
-- [pandoc](http://pandoc.org)
-- [XeLaTeX](http://xelatex.org)
+- [pandoc](http://pandoc.org) -- Tested with pandoc 1.15.0.6
+- [XeLaTeX](http://xelatex.org) -- Tested with XeTeX 3.14159265-2.6-0.99992 (TeX Live 2015)
 - [metropolis](https://github.com/matze/mtheme)
   Beamer theme (working forked version here:
   [`https://github.com/yogsototh/mtheme`](https://github.com/yogsototh/mtheme))

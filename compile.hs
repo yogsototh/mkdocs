@@ -9,6 +9,7 @@ import qualified Filesystem.Path     as F
 import           Prelude             hiding (FilePath)
 import           System.Console.ANSI
 import           Turtle
+import Data.Maybe (isJust,fromJust)
 
 -- Command Line Options
 data Options =
@@ -47,7 +48,7 @@ main = do
         Nothing -> findMarkdownFiles
         Just someFile -> return someFile
       liftIO $ do
-        when (debug opts) (yellowPrn ("-- " <> format fp argfile <> " --"))
+        yellowPrn ("-- " <> format fp argfile <> " --")
         cd (directory argfile)
         when (web opts) (toWeb (debug opts) argfile)
         when (reveal opts) (toReveal (debug opts) argfile)
@@ -57,7 +58,11 @@ main = do
 
 -- | Find Markdown Files (skip hidden directories)
 findMarkdownFiles :: Shell FilePath
-findMarkdownFiles = fgrep (invert (prefix "./.")) $ find  (has ".md") "."
+findMarkdownFiles = do
+    fic <- find  (has ".md") "." & fgrep (invert (prefix "./."))
+    let mf = stripPrefix "./" fic
+    _ <- guard (isJust mf)
+    return (fromJust mf)
 
 -- | basic exec command with debug option and colors DONE or FAILED status
 execcmd :: Bool -> FilePath -> Text -> IO ()
@@ -70,7 +75,7 @@ execcmd dbg dest cmd = do
       ExitFailure _ -> redPrn "[FAILED]"
 
 toprefix :: FilePath -> FilePath
-toprefix fpath = F.concat $ map (const "..") (filter (== ".") (splitDirectories (directory fpath)))
+toprefix fpath = F.concat $ map (const "..") (filter (/= "./") (splitDirectories (directory fpath)))
 
 -- | Generate HTML format
 toWeb :: Bool -> FilePath -> IO ()
@@ -87,10 +92,10 @@ toWeb dbg fpath = do
 -- | Generate HTML Reveal.js Presentation
 toReveal :: Bool -> FilePath -> IO ()
 toReveal dbg fpath = do
-  let dest = fpath |> filename
-                   |> dropExtension
-                   |> flip addExtension "reveal"
-                   |> flip addExtension "html"
+  let dest = fpath & filename
+                   & dropExtension
+                   & flip addExtension "reveal"
+                   & flip addExtension "html"
       pr :: FilePath
       pr = toprefix fpath
       template = pr </> "template-revealjs.html"
@@ -108,9 +113,9 @@ toReveal dbg fpath = do
 -- | Generate PDF Document using XeLaTeX
 toPdf :: Bool -> FilePath -> IO ()
 toPdf dbg fpath = do
-  let dest = fpath |> filename
-                   |> dropExtension
-                   |> flip addExtension "pdf"
+  let dest = fpath & filename
+                   & dropExtension
+                   & flip addExtension "pdf"
       pr = toprefix fpath
       template = pr </> "template.latex"
       cmd = "pandoc -s -S -N --toc "
@@ -127,16 +132,16 @@ toPdf dbg fpath = do
 -- | Generate Beamer Presentation PDF
 toBeamer :: Bool -> FilePath -> IO ()
 toBeamer dbg fpath = do
-  mslideLevel <- fold (fpath |> filename
-                             |> input
-                             |> grep (prefix "slide_level: ")
-                             |> sed (prefix "slide_level: " *> star digit))
+  mslideLevel <- fold (fpath & filename
+                             & input
+                             & grep (prefix "slide_level: ")
+                             & sed (prefix "slide_level: " *> star digit))
                      Fold.head
   let slideLevel = maybe "2" (\l -> if l == "" then "2" else l) mslideLevel
-      dest = fpath |> filename
-                   |> dropExtension
-                   |> flip addExtension "beamer"
-                   |> flip addExtension "pdf"
+      dest = fpath & filename
+                   & dropExtension
+                   & flip addExtension "beamer"
+                   & flip addExtension "pdf"
       cmd :: Text
       cmd = "pandoc -s -S -N "
             <> "-t beamer "
@@ -167,13 +172,6 @@ redPrn = prnColor Red
 
 yellowPrn :: Text -> IO ()
 yellowPrn = prnColor Yellow
-
--- | Helper to make code look a lot more (->) in Clojure
--- Generally humans, prefer to read function applied in the order
--- from left to right not in the reverse order.
--- This operator can be found in F# and Elm
-(|>) :: a -> (a -> b) -> b
-(|>) v fn = fn v
 
 -- # Grep Files helper
 
