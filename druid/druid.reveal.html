@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link rel="stylesheet" href="../.reveal.js-3.2.0/css/reveal.css">
-  <link rel="stylesheet" href="../.reveal.js-3.2.0/css/theme/solarized.css" id="theme">
+  <link rel="stylesheet" href="../.reveal.js-3.2.0/css/theme/black.css" id="theme">
 <!-- For syntax highlighting -->
   <link rel="stylesheet" href="../.reveal.js-3.2.0/lib/css/zenburn.css">
 <!-- If the query includes 'print-pdf', use the PDF print sheet -->
@@ -130,19 +130,19 @@
     center: false,
 
   // available themes are in /css/theme
-      theme: Reveal.getQueryHash().theme || 'solarized',
+      theme: Reveal.getQueryHash().theme || 'black',
   
   // default/cube/page/concave/zoom/linear/fade/none
       transition: Reveal.getQueryHash().transition || 'linear',
   
   // Optional libraries used to extend on reveal.js
   dependencies: [
-    { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
-    { src: 'plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-    { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-    { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
-    { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+    { src: '..//.reveal.js-3.2.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+    { src: '..//.reveal.js-3.2.0/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+    { src: '..//.reveal.js-3.2.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+    { src: '..//.reveal.js-3.2.0/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+    { src: '..//.reveal.js-3.2.0/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+    { src: '..//.reveal.js-3.2.0/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
   ]
   });
 

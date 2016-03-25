@@ -92,7 +92,13 @@ toWeb dbg fpath = do
 -- | Generate HTML Reveal.js Presentation
 toReveal :: Bool -> FilePath -> IO ()
 toReveal dbg fpath = do
-  let dest = fpath & filename
+  mslideLevel <- fold (fpath & filename
+                             & input
+                             & grep (prefix "slide_level: ")
+                             & sed (prefix "slide_level: " *> star digit))
+                     Fold.head
+  let slideLevel = maybe "2" (\l -> if l == "" then "2" else l) mslideLevel
+      dest = fpath & filename
                    & dropExtension
                    & flip addExtension "reveal"
                    & flip addExtension "html"
@@ -104,6 +110,7 @@ toReveal dbg fpath = do
       cmd = "pandoc -s -mathjax -t html5 "
                 <> "--template=" <> format fp template <> " "
                 <> "--section-divs "
+                <> "--slide-level=" <> slideLevel <> " "
                 <> "--variable transition=linear "
                 <> "--variable prefix=" <> prt <> " "
                 <> "-o " <> format fp dest <> " "
