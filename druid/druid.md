@@ -36,7 +36,7 @@ date: 7 Avril 2016
 - Traitement de donnée gros volume + faible latence
 - Typiquement `pulse`
 
-<a href="http://pulse.vigiglo.be/#/vgteam/TV_Shows" target="_blank">
+<a href="http://pulse.vigiglo.be/#/vigiglobe/Earthquake/dashboard" target="_blank">
 DEMO
 </a>
 
