@@ -41,6 +41,7 @@ initOptions = do
 main :: IO ()
 main = do
     opts <- initOptions
+    maindir <- pwd
     sh $ do
       argfile <- case file opts of
         Nothing -> findMarkdownFiles
@@ -52,6 +53,7 @@ main = do
         when (reveal opts) (toReveal (debug opts) argfile)
         when (pdf opts) (toPdf (debug opts) argfile)
         when (beamer opts) (toBeamer (debug opts) argfile)
+        cd maindir
 
 -- | Find Markdown Files (skip hidden directories)
 findMarkdownFiles :: Shell FilePath
@@ -67,12 +69,14 @@ execcmd dbg dest cmd = do
       ExitSuccess -> greenPrn "[DONE]"
       ExitFailure _ -> redPrn "[FAILED]"
 
+toprefix :: FilePath -> FilePath
+toprefix fpath = F.concat $ map (const "..") (filter (== ".") (splitDirectories (directory fpath)))
+
 -- | Generate HTML format
 toWeb :: Bool -> FilePath -> IO ()
 toWeb dbg fpath = do
   let dest = filename (replaceExtension fpath "html")
-      pr :: FilePath
-      pr = F.concat $ map (const "..") (splitDirectories (directory fpath))
+      pr = toprefix fpath
       cmd = "pandoc -s -S --toc -mathjax -t html5 --smart "
             <> "--css " <> format fp (pr </> "styling.css") <> " "
             <> "-A " <> format fp (pr </> "footer.html") <> " "
@@ -88,7 +92,7 @@ toReveal dbg fpath = do
                    |> flip addExtension "reveal"
                    |> flip addExtension "html"
       pr :: FilePath
-      pr = F.concat $ map (const "..") (splitDirectories (directory fpath))
+      pr = toprefix fpath
       template = pr </> "template-revealjs.html"
       prt :: Text
       prt = format fp pr
@@ -107,7 +111,7 @@ toPdf dbg fpath = do
   let dest = fpath |> filename
                    |> dropExtension
                    |> flip addExtension "pdf"
-      pr = F.concat $ map (const "..") (splitDirectories (directory fpath))
+      pr = toprefix fpath
       template = pr </> "template.latex"
       cmd = "pandoc -s -S -N --toc "
                 <> "--template=" <> format fp template <> " "
