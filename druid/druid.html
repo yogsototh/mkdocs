@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="author" content="Yann Esposito">
+  <title>Druid pour l’analyse de données en temps réel</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="../styling.css">
+</head>
+<body>
+<header>
+<h1 class="title">Druid pour l’analyse de données en temps réel</h1>
+<h2 class="author">Yann Esposito</h2>
+<h3 class="date">7 Avril 2016</h3>
+</header>
+<nav id="TOC">
+<ul>
+<li><a href="#intro">Intro</a><ul>
+<li><a href="#plan">Plan</a></li>
+<li><a href="#expérience">Expérience</a></li>
+<li><a href="#demande">Demande</a></li>
+<li><a href="#en-pratique">En pratique</a></li>
+<li><a href="#origine-php">Origine (PHP)</a></li>
+<li><a href="#introduction">Introduction</a></li>
+</ul></li>
+<li><a href="#druid">Druid</a><ul>
+<li><a href="#who">Who</a></li>
+<li><a href="#goal">Goal</a></li>
+<li><a href="#concepts">Concepts</a></li>
+<li><a href="#features">Features</a></li>
+<li><a href="#proof">Proof</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="intro">Intro</h1>
+<h2 id="plan">Plan</h2>
+<ul>
+<li>Introduction ; pourquoi ?</li>
+<li>Comment ?</li>
+</ul>
+<h2 id="expérience">Expérience</h2>
+<ul>
+<li>Real Time Social Media Analytics</li>
+</ul>
+<h2 id="demande">Demande</h2>
+<ul>
+<li>Twitter: <code>20k msg/s</code>, <code>1msg = 10ko</code> pendant 24h</li>
+<li>Facebook public: 1000 à 2000 msg/s en continu</li>
+</ul>
+<h2 id="en-pratique">En pratique</h2>
+<ul>
+<li>Twitter: 400 msg/s en continu, pics à 1500</li>
+</ul>
+<h2 id="origine-php">Origine (PHP)</h2>
+<p><img src="img/bad_php.jpg" alt="History" /> </p>
+<h2 id="introduction">Introduction</h2>
+<ul>
+<li>Traitement de donnée gros volume + faible latence</li>
+<li>Typiquement <code>pulse</code></li>
+</ul>
+<p><a href="http://pulse.vigiglo.be/#/vgteam/TV_Shows" target="_blank"> DEMO </a></p>
+<h1 id="druid">Druid</h1>
+<h2 id="who">Who</h2>
+<p>Metamarkets</p>
+<h2 id="goal">Goal</h2>
+<blockquote>
+<p>Druid is an open source store designed for real-time exploratory analytics on large data sets.</p>
+</blockquote>
+<blockquote>
+<p>hosted dashboard that would allow users to arbitrarily explore and visualize event streams.</p>
+</blockquote>
+<h2 id="concepts">Concepts</h2>
+<ul>
+<li>Column-oriented storage layout</li>
+<li>distributed, shared-nothing architecture</li>
+<li>advanced indexing structure</li>
+</ul>
+<h2 id="features">Features</h2>
+<ul>
+<li>fast aggregations</li>
+<li>flexible filters</li>
+<li>low latency data ingestion</li>
+</ul>
+<p><strong>arbitrary exploration of billion-row tables tables with sub-second latencies</strong></p>
+<h2 id="proof">Proof</h2>
+<div id="footer">
+<a href="yannesposito.com">Y</a>
+</div>
+</body>
+</html>

@@ -102,6 +102,8 @@ $endif$
 \definecolor{cyan}{RGB}{42,161,152}
 \definecolor{green}{RGB}{133,153,0}
 % -----------------------------------------
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \hypersetup{breaklinks=true,
             bookmarks=true,
             pdfauthor={$author-meta$},
