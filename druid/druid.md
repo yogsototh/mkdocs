@@ -3,7 +3,7 @@ title: Druid pour l'analyse de données en temps réel
 author: Yann Esposito
 abstract: Druid expliqué rapidement, pourquoi, comment.
 slide_level: 2
-theme: solarized
+theme: solarized-dark
 date: 7 Avril 2016
 ---
 
