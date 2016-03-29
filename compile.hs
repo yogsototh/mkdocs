@@ -10,6 +10,7 @@ import           Prelude             hiding (FilePath)
 import           System.Console.ANSI
 import           Turtle
 import Data.Maybe (isJust,fromJust)
+import qualified System.IO as System
 
 -- Command Line Options
 data Options =
@@ -64,11 +65,16 @@ findMarkdownFiles = do
     _ <- guard (isJust mf)
     return (fromJust mf)
 
+pr :: Text -> IO ()
+pr txt = do
+    T.putStr txt
+    System.hFlush System.stdout
+
 -- | basic exec command with debug option and colors DONE or FAILED status
 execcmd :: Bool -> FilePath -> Text -> IO ()
 execcmd dbg dest cmd = do
     when dbg (T.putStrLn cmd)
-    T.putStr $ format fp dest <> " "
+    pr (format fp dest <> " ")
     answer <- shell cmd empty
     case answer of
       ExitSuccess -> greenPrn "[DONE]"
