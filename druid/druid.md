@@ -9,11 +9,6 @@ date: 7 Avril 2016
 
 # Intro
 
-## Plan
-
-- Introduction; why?
-- How?
-
 ## Experience
 
 - Real Time Social Media Analytics
@@ -23,33 +18,42 @@ date: 7 Avril 2016
 - Ingestion Latency: seconds
 - Query Latency: seconds
 
-## Demande
+## Demand
 
-- Twitter: `20k msg/s`, `1msg = 10ko`  pendant 24h
-- Facebook public: 1000 à 2000 msg/s en continu
+- Twitter: `20k msg/s`, `1msg = 10ko`  during 24h
+- Facebook public: 1000 to 2000 msg/s continuously
 
-## En pratique
+## Reality
 
-- Twitter: 400 msg/s en continu, pics à 1500
+- Twitter: 400 msg/s continuously, burst to 1500
+- Facebook: 1000 to 2000 msg/s
 
-## Origine (PHP)
+## Origin (PHP)
 
-![History](img/bad_php.jpg)\  
+![OH NOES PHP!](img/bad_php.jpg)\  
 
-## Introduction
+## Refactoring
 
-- Traitement de donnée gros volume + faible latence
-- Typiquement `pulse`
+- Haskell
+- Clojure / Clojurescript
+- Kafka / Zookeeper
+- Mesos / Marathon
+- **Druid**
+
+## Demo
+
+- Low Latency High Volume of Data Analysis
+- Typically `pulse`
 
 <a href="http://pulse.vigiglo.be/#/vigiglobe/Earthquake/dashboard" target="_blank">
-DEMO
+DEMO Time
 </a>
 
-## Pre Considerations
+# Pre Considerations
 
-Discovered vs Invented
+## Discovered vs Invented
 
-## Try to conceptualize (events)
+Try to conceptualize
 
 Scalable + Real Time + Fail safe
 
@@ -64,9 +68,13 @@ Druid concepts are always emerging naturally
 
 # Druid
 
-## Who
+## Who?
 
 Metamarkets
+
+[Powered by Druid](http://druid.io/druid-powered.html)
+
+- Alibaba, Cisco, Criteo, eBay, Hulu, Netflix, Paypal...
 
 ## Goal
 
@@ -82,19 +90,188 @@ Metamarkets
 - distributed, shared-nothing architecture
 - advanced indexing structure
 
-## Features
+## Key Features
 
-- fast aggregations
-- flexible filters
-- low latency data ingestion
+- Sub-second OLAP Queries
+- Real-time Streaming Ingestion
+- Power Analytic Applications
+- Cost Effective
+- High Available
+- Scalable
 
-**arbitrary exploration of billion-row tables tables with sub-second latencies**
+## Right for me?
+
+- require fast aggregations
+- exploratory analytics
+- analysis in real-time
+- lots of data (trillions of events, petabytes of data)
+- no single point of failure
+
+# High Level Architecture
+
+## Inpiration
+
+- Google's [BigQuery/Dremel](http://static.googleusercontent.com/media/research.google.com/en/us/pubs/archive/36632.pdf)
+- Google's [PowerDrill](http://vldb.org/pvldb/vol5/p1436_alexanderhall_vldb2012.pdf)
+
+## Index / Immutability
+
+Druid indexes data to create mostly immutable views.
 
 ## Storage
 
-- Columnar
-- Inverted Index
-- Immutable Segments
+Store data in custom column format highly optimized for aggregation & filter.
+
+## Specialized Nodes
+
+- A Druid cluster is composed of various type of nodes
+- Each designed to do a small set of things very well
+- Nodes don't need to be deployed on individual hardware
+- Many node types can be colocated in production
+
+# Druid vs X
+
+## Elasticsearch
+
+- resource requirement much higher for ingestion & aggregation
+- No data summarization (100x in real world data)
+
+## Key/Value Stores (HBase/Cassandra/OpenTSDB)
+
+- Must Pre-compute Result
+    - Exponential storage
+    - Hours of pre-processing time
+- Use the dimensions as key (like in OpenTSDB)
+    - No filter index other than range
+    - Hard for complex predicates
+
+## Spark
+
+- Druid can be used to accelerate OLAP queries in Spark
+- Druid focuses on the latencies to ingest and serve queries
+- Too long for end user to arbitrarily explore data
+
+## SQL-on-Hadoop (Impala/Drill/Spark SQL/Presto)
+
+- Queries: more data transfer between nodes
+- Data Ingestion: bottleneck by backing store
+- Query Flexibility: more flexible (full joins)
+
+# Data
+
+## Concepts
+
+- **Timestamp column**: query centered on time axis
+- **Dimension columns**: strings (used to filter or to group)
+- **Metric columns**: used for aggregations (count, sum, mean, etc...)
+
+# Roll-up
+
+## from
+
+~~~
+timestamp             publisher          advertiser  gender  country  click  price
+2011-01-01T01:01:35Z  bieberfever.com    google.com  Male    USA      0      0.65
+2011-01-01T01:03:63Z  bieberfever.com    google.com  Male    USA      0      0.62
+2011-01-01T01:04:51Z  bieberfever.com    google.com  Male    USA      1      0.45
+2011-01-01T01:00:00Z  ultratrimfast.com  google.com  Female  UK       0      0.87
+2011-01-01T02:00:00Z  ultratrimfast.com  google.com  Female  UK       0      0.99
+2011-01-01T02:00:00Z  ultratrimfast.com  google.com  Female  UK       1      1.53
+~~~
+
+## to
+
+~~~
+timestamp             publisher          advertiser  gender country impressions clicks revenue
+2011-01-01T01:00:00Z  ultratrimfast.com  google.com  Male   USA     1800        25     15.70
+2011-01-01T01:00:00Z  bieberfever.com    google.com  Male   USA     2912        42     29.18
+2011-01-01T02:00:00Z  ultratrimfast.com  google.com  Male   UK      1953        17     17.31
+2011-01-01T02:00:00Z  bieberfever.com    google.com  Male   UK      3194        170    34.01
+~~~
+
+## as SQL
+
+~~~
+GROUP BY timestamp
+       , publisher , advertiser , gender , country
+  :: impressions = COUNT(1)
+  ,  clicks = SUM(click)
+  ,  revenue = SUM(price)
+~~~
+
+In practice can dramatically reduce the size (up to x100)
+
+# Sharding
+
+## Segments
+
+Segment sampleData_2011-01-01T01:00:00:00Z_2011-01-01T02:00:00:00Z_v1_0 contains
+
+~~~
+2011-01-01T01:00:00Z  ultratrimfast.com  google.com  Male   USA     1800        25     15.70
+2011-01-01T01:00:00Z  bieberfever.com    google.com  Male   USA     2912        42     29.18
+~~~
+
+Segment sampleData_2011-01-01T02:00:00:00Z_2011-01-01T03:00:00:00Z_v1_0 contains
+
+~~~
+2011-01-01T02:00:00Z  ultratrimfast.com  google.com  Male   UK      1953        17     17.31
+2011-01-01T02:00:00Z  bieberfever.com    google.com  Male   UK      3194        170    34.01
+~~~
+
+## Core Data Structure
+
+![Segment](img/druid-column-types.png)\  
+
+- dictionary
+- a bitmap for each value
+- a list of the columns values encoded using the dictionary
+
+## Dictionary
+
+~~~
+{ "Justin Bieber": 0
+, "Ke$ha": 1
+}
+~~~
+
+## Columnn Data
+
+~~~
+[ 0
+, 0
+, 1
+, 1
+]
+~~~
+
+## Bitmaps
+
+one for each value of the column
+
+~~~
+value="Justin Bieber": [1,1,0,0]
+value="Ke$ha": [0,0,1,1]
+~~~
+
+# Data
+
+## Indexing Data
+
+- Immutable snapshots of data
+- data structure highly optimized for analytic queries
+- Each column is stored separately
+- Indexes data on a per shard (segment) level
+
+## Loading data
+
+- Real-Time 
+- Batch
+
+## Querying the data
+
+- JSON over HTTP
+- Single Table Operations, no joins.
 
 ## Columnar Storage
 
@@ -115,23 +292,23 @@ Metamarkets
 ## Data Segments
 
 - Per time interval
-  - skip segments when querying
+    - skip segments when querying
 - Immutable
-  - Cache friendly
-  - No locking
+    - Cache friendly
+    - No locking
 - Versioned
-  - No locking
-  - Read-write concurrency
+    - No locking
+    - Read-write concurrency
   
 ## Real-time ingestion
 
 - Via Real-Time Node and Firehose
-  - No redundancy or HA, thus not recommended
+    - No redundancy or HA, thus not recommended
 - Via Indexing Service and Tranquility API
-  - Core API
-  - Integration with Streaming Frameworks
-  - HTTP Server
-  - **Kafka Consumer**
+    - Core API
+    - Integration with Streaming Frameworks
+    - HTTP Server
+    - **Kafka Consumer**
 
 ## Batch Ingestion
 
@@ -185,10 +362,10 @@ TODO
 ## Caching
 
 - Historical node level
-  - By segment
+    - By segment
 - Broker Level
-  - By segment and query
-  - `groupBy` is disabled on purpose!
+    - By segment and query
+    - `groupBy` is disabled on purpose!
 - By default - local caching
 
 ## Load Rules
@@ -205,8 +382,8 @@ TODO
 - Broker Nodes
 - Coordinator
 - For indexing:
-  - Overlord
-  - Middle Manager
+    - Overlord
+    - Middle Manager
 
 + Deep Storage
 + Metadata Storage
