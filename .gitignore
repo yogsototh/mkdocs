@@ -2,3 +2,5 @@ TAGS
 compile
 compile.hi
 compile.o
+*.html
+*.pdf
