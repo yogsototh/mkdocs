@@ -109,7 +109,7 @@ Metamarkets
 
 # High Level Architecture
 
-## Inpiration
+## Inspiration
 
 - Google's [BigQuery/Dremel](http://static.googleusercontent.com/media/research.google.com/en/us/pubs/archive/36632.pdf)
 - Google's [PowerDrill](http://vldb.org/pvldb/vol5/p1436_alexanderhall_vldb2012.pdf)
