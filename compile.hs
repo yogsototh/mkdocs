@@ -1,5 +1,5 @@
 #!/usr/bin/env stack
--- stack --install-ghc runghc --package turtle --resolver lts-5.5 --verbosity silent --package=ansi-terminal
+-- stack --install-ghc runghc --package turtle --resolver lts-5.5 --verbosity s
 
 {-# LANGUAGE OverloadedStrings #-}
 import qualified Control.Foldl       as Fold
@@ -87,10 +87,10 @@ toprefix fpath = F.concat $ map (const "..") (filter (/= "./") (splitDirectories
 toWeb :: Bool -> FilePath -> IO ()
 toWeb dbg fpath = do
   let dest = filename (replaceExtension fpath "html")
-      pr = toprefix fpath
+      prf = toprefix fpath
       cmd = "pandoc -s -S --toc -mathjax -t html5 --smart "
-            <> "--css " <> format fp (pr </> "styling.css") <> " "
-            <> "-A " <> format fp (pr </> "footer.html") <> " "
+            <> "--css " <> format fp (prf </> "styling.css") <> " "
+            <> "-A " <> format fp (prf </> "footer.html") <> " "
             <> "-o " <> format fp dest <> " "
             <> format fp (filename fpath)
   execcmd dbg dest cmd
@@ -108,11 +108,10 @@ toReveal dbg fpath = do
                    & dropExtension
                    & flip addExtension "reveal"
                    & flip addExtension "html"
-      pr :: FilePath
-      pr = toprefix fpath
-      template = pr </> "template-revealjs.html"
+      prf = toprefix fpath
+      template = prf </> "template-revealjs.html"
       prt :: Text
-      prt = format fp pr
+      prt = format fp prf
       cmd = "pandoc -s -mathjax -t html5 "
                 <> "--template=" <> format fp template <> " "
                 <> "--section-divs "
@@ -129,8 +128,8 @@ toPdf dbg fpath = do
   let dest = fpath & filename
                    & dropExtension
                    & flip addExtension "pdf"
-      pr = toprefix fpath
-      template = pr </> "template.latex"
+      prf = toprefix fpath
+      template = prf </> "template.latex"
       cmd = "pandoc -s -S -N --toc "
                 <> "--template=" <> format fp template <> " "
                 <> "--section-divs "
@@ -188,9 +187,38 @@ yellowPrn = prnColor Yellow
 
 -- # Grep Files helper
 
+
+-- onFiles :: (Shell Text -> Shell Text) -> Shell FilePath -> Shell FilePath
+-- onFiles txtAction sp = do
+--   fpath <- sp
+--   _ <- txtAction (either id id (toText fpath))
+--   return fpath
+
+-- Bonus Discussion
+--
+-- on :: (a -> [b]) -> Shell a -> Shell b
+-- on trans sa = do
+--   anA <- sa
+--   select (trans anA)
+--
+-- toDup :: Shell FilePath -> Shell (Text,FilePath)
+-- toDup sf = do
+--   fpath <- sf
+--   let txtpath = either id id (toText fpath)
+--   return (txtpath,fpath)
+--
+-- fpgrep :: Pattern a -> Shell FilePath -> Shell FilePath
+-- fpgrep pat =
+--   on (\fpath -> match pat (either id id (toText fpath)) >> return fpath)
+
+onFiles :: (Text -> FilePath -> [b]) -> Shell FilePath -> Shell b
+onFiles trans sa = do
+  anA <- sa
+  let bs = trans (either id id (toText anA)) anA
+  select bs
+
 -- | Same as grep put to be used after find or ls
 fgrep :: Pattern a -> Shell FilePath -> Shell FilePath
-fgrep pat sp = do
-  fpath <- sp
-  _:_ <- return (match pat (either id id (toText fpath)))
+fgrep pat = onFiles $ \ tpath fpath -> do
+  _ <- match pat tpath
   return fpath
