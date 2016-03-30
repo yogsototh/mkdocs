@@ -72,7 +72,8 @@ Druid concepts are always emerging naturally
 
 Metamarkets
 
-[Powered by Druid](http://druid.io/druid-powered.html)
+<a href="http://druid.io/druid-powered.html"
+   target="_blank">Powered by Druid</a>
 
 - Alibaba, Cisco, Criteo, eBay, Hulu, Netflix, Paypal...
 
