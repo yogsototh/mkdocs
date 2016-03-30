@@ -1,11 +1,25 @@
 ---
-title: Druid pour l'analyse de données en temps réel
+title: Druid for real-time analysis
 author: Yann Esposito
-abstract: Druid expliqué rapidement, pourquoi, comment.
+abstract: Druid explained with high altitude point of view
 slide_level: 2
 theme: solarized-dark
+highlight-style: solarized-dark
 date: 7 Avril 2016
 ---
+
+# Druid the Sales Pitch
+
+- Sub-Second Queries
+- Real-time Streams
+- Scalable to Petabytes
+- Deploy Anywhere
+- Vibrant Community (Open Source)
+
+<aside class="notes">
+- Ideal for powering user-facing analytic applications
+- Deploy anywhere: cloud, on-premise, integrate with Haddop, Spark, Kafka, Storm, Samza
+</aside>
 
 # Intro
 
