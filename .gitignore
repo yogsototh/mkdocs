@@ -1,6 +1,7 @@
 TAGS
+build/
 compile
-compile.hi
-compile.o
+*.hi
+*.o
 *.html
 *.pdf

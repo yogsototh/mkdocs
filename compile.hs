@@ -60,7 +60,7 @@ main = do
 -- | Find Markdown Files (skip hidden directories)
 findMarkdownFiles :: Shell FilePath
 findMarkdownFiles = do
-    fic <- find  (has ".md") "." & fgrep (invert (prefix "./."))
+    fic <- find  (suffix ".md") "." & fgrep (invert (prefix "./."))
     let mf = stripPrefix "./" fic
     _ <- guard (isJust mf)
     return (fromJust mf)
@@ -101,7 +101,7 @@ toReveal dbg fpath = do
   mslideLevel <- fold (fpath & filename
                              & input
                              & grep (prefix "slide_level: ")
-                             & sed (prefix "slide_level: " *> star digit))
+                             & sed (prefix ("slide_level: " *> plus digit)))
                      Fold.head
   let slideLevel = maybe "2" (\l -> if l == "" then "2" else l) mslideLevel
       dest = fpath & filename
