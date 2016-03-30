@@ -3,11 +3,23 @@ theme: metropolis
 ---
 # No Brainer Markdown to HTML & PDF
 
-Given a tree of markdown file, generate an HTML and PDF generated file for each.
-Just launch.
+For each markdown files it will generate:
+
+- an HTML Document
+- an HTML Presentation (using reveal.js)
+- a PDF Document (using XeLaTeX)
+- a PDF Presentation (using Beamer)
 
 ~~~
 ./compile.sh
+~~~
+
+If you want to be the 1337, install [`stack`](http://haskellstack.org)
+and
+
+~~~
+./build.sh
+./compile
 ~~~
 
 ## Dependencies
