@@ -163,6 +163,43 @@ Metamarkets
 - Google's [BigQuery/Dremel](http://static.googleusercontent.com/media/research.google.com/en/us/pubs/archive/36632.pdf)
 - Google's [PowerDrill](http://vldb.org/pvldb/vol5/p1436_alexanderhall_vldb2012.pdf)
 
+## Batch only
+
+![Batch only](img/batch-only.png)
+
+## Historical nodes
+
+- Main workhorses of a Druid cluster
+- Respond to queries on segments
+- Shared-nothing architecture
+
+## Batch only (Querying)
+
+![Batch only with querying](img/batch-only-2.png)
+
+## Broker nodes
+
+- Knows which nodes hold what data
+- Query scatter/gather (send requests to nodes and merge results)
+- Caching
+
+## Real-Time nodes
+
+- Write-optimized data structure: hash map in heap
+- Convert write optimized -> read optimized
+- Read-optimized data structure: Druid segments
+- Query data immediately
+
+![Real-Time](img/realtime.png)
+
+## Realtime only
+
+![Real-Time ingestion](img/realtime-2.png)
+
+## Lambda
+
+![Real-Time ingestion](img/lambda.png)
+
 ## Index / Immutability
 
 Druid indexes data to create mostly immutable views.
