@@ -3,5 +3,3 @@ build/
 compile
 *.hi
 *.o
-*.html
-*.pdf
