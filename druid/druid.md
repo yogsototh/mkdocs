@@ -36,6 +36,7 @@ date: 7 Avril 2016
 
 - Twitter: `20k msg/s`, `1msg = 10ko`  during 24h
 - Facebook public: 1000 to 2000 msg/s continuously
+- Low Latency
 
 ## Reality
 
@@ -67,14 +68,14 @@ DEMO Time
 
 ## Discovered vs Invented
 
-Try to conceptualize
+Try to conceptualize a s.t.
 
-Scalable + Real Time + Fail safe
+- Ingest Events
+- Real-Time Queries
+- Scalable
+- Highly Available
 
-- timeseries
-- alerting system
-- top N
-- etc...
+Analytics: timeseries, alerting system, top N, etc...
 
 ## In the End
 
@@ -182,36 +183,33 @@ Store data in custom column format highly optimized for aggregation & filter.
 
 # Roll-up
 
-## from
+## Example
 
 ~~~
-timestamp             publisher          advertiser  gender  country  click  price
-2011-01-01T01:01:35Z  bieberfever.com    google.com  Male    USA      0      0.65
-2011-01-01T01:03:63Z  bieberfever.com    google.com  Male    USA      0      0.62
-2011-01-01T01:04:51Z  bieberfever.com    google.com  Male    USA      1      0.45
-2011-01-01T01:00:00Z  ultratrimfast.com  google.com  Female  UK       0      0.87
-2011-01-01T02:00:00Z  ultratrimfast.com  google.com  Female  UK       0      0.99
-2011-01-01T02:00:00Z  ultratrimfast.com  google.com  Female  UK       1      1.53
+timestamp             page          ... added  deleted
+2011-01-01T00:01:35Z  Justin Bieber     10      65
+2011-01-01T00:03:63Z  Justin Bieber     15      62
+2011-01-01T01:04:51Z  Justin Bieber     32      45
+2011-01-01T01:01:00Z  Ke$ha             17      87
+2011-01-01T01:02:00Z  Ke$ha             43      99
+2011-01-01T02:03:00Z  Ke$ha             12      53
 ~~~
 
-## to
-
 ~~~
-timestamp             publisher          advertiser  gender country impressions clicks revenue
-2011-01-01T01:00:00Z  ultratrimfast.com  google.com  Male   USA     1800        25     15.70
-2011-01-01T01:00:00Z  bieberfever.com    google.com  Male   USA     2912        42     29.18
-2011-01-01T02:00:00Z  ultratrimfast.com  google.com  Male   UK      1953        17     17.31
-2011-01-01T02:00:00Z  bieberfever.com    google.com  Male   UK      3194        170    34.01
+timestamp             page          ... nb added deleted
+2011-01-01T00:00:00Z  Justin Bieber      2 25    127
+2011-01-01T01:00:00Z  Justin Bieber      1 32    45
+2011-01-01T01:00:00Z  Ke$ha              2 60    186
+2011-01-01T02:00:00Z  Ke$ha              1 12    53
 ~~~
 
 ## as SQL
 
 ~~~
-GROUP BY timestamp
-       , publisher , advertiser , gender , country
-  :: impressions = COUNT(1)
-  ,  clicks = SUM(click)
-  ,  revenue = SUM(price)
+GROUP BY timestamp, page, nb, added, deleted
+  :: nb = COUNT(1)
+  ,  added = SUM(added)
+  ,  deleted = SUM(deleted)
 ~~~
 
 In practice can dramatically reduce the size (up to x100)
@@ -220,14 +218,14 @@ In practice can dramatically reduce the size (up to x100)
 
 ## Segments
 
-Segment sampleData_2011-01-01T01:00:00:00Z_2011-01-01T02:00:00:00Z_v1_0 contains
+Segment `sampleData_2011-01-01T01:00:00:00Z_2011-01-01T02:00:00:00Z_v1_0` contains
 
 ~~~
 2011-01-01T01:00:00Z  ultratrimfast.com  google.com  Male   USA     1800        25     15.70
 2011-01-01T01:00:00Z  bieberfever.com    google.com  Male   USA     2912        42     29.18
 ~~~
 
-Segment sampleData_2011-01-01T02:00:00:00Z_2011-01-01T03:00:00:00Z_v1_0 contains
+Segment `sampleData_2011-01-01T02:00:00:00Z_2011-01-01T03:00:00:00Z_v1_0` contains
 
 ~~~
 2011-01-01T02:00:00Z  ultratrimfast.com  google.com  Male   UK      1953        17     17.31
