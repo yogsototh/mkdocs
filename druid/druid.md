@@ -43,19 +43,52 @@ date: 7 Avril 2016
 - Twitter: 400 msg/s continuously, burst to 1500
 - Facebook: 1000 to 2000 msg/s
 
-## Origin (PHP)
+# Origin (PHP)
 
 ![OH NOES PHP!](img/bad_php.jpg)\  
 
-## Refactoring
+# 1st Refactoring (Node.js)
+
+- Ingestion still in PHP
+- Node.js, Perl, Java & R for sentiment analysis
+- MongoDB
+- Manually made time series (Incremental Map/Reduce)
+- Manually coded HyperLogLog in js
+
+# Return of Experience
+
+![MongoDB the destroyer](img/mongoDB.png)\  
+
+# Return of Experience
+
+- Ingestion still in PHP (600 msg/s max)
+- Node.js, Perl, Java (10 msg/s max)
+
+![Too Slow, Bored](img/bored.gif)
+
+# 2nd Refactoring
 
 - Haskell
 - Clojure / Clojurescript
 - Kafka / Zookeeper
 - Mesos / Marathon
+- Elasticsearch
 - **Druid**
 
-## Demo
+# 2nd Refactoring (FTW!)
+
+![Now we're talking](img/talking.jpg)\  
+
+# 2nd Refactoring return of experience
+
+- No limit, everything is scalable
+- High availability
+- Low latency: Ingestion & User faced querying
+- Cheap if done correctly
+
+**Thanks Druid!**
+
+# Demo
 
 - Low Latency High Volume of Data Analysis
 - Typically `pulse`
@@ -218,18 +251,18 @@ In practice can dramatically reduce the size (up to x100)
 
 ## Segments
 
-Segment `sampleData_2011-01-01T01:00:00:00Z_2011-01-01T02:00:00:00Z_v1_0` contains
+<small>`sampleData_2011-01-01T01:00:00:00Z_2011-01-01T02:00:00:00Z_v1_0`</small>
 
 ~~~
-2011-01-01T01:00:00Z  ultratrimfast.com  google.com  Male   USA     1800        25     15.70
-2011-01-01T01:00:00Z  bieberfever.com    google.com  Male   USA     2912        42     29.18
+2011-01-01T01:00:00Z  Justin Bieber      1 20    45
+2011-01-01T01:00:00Z  Ke$ha              1 30    106
 ~~~
 
-Segment `sampleData_2011-01-01T02:00:00:00Z_2011-01-01T03:00:00:00Z_v1_0` contains
+<small>`sampleData_2011-01-01T01:00:00:00Z_2011-01-01T02:00:00:00Z_v1_0`</small>
 
 ~~~
-2011-01-01T02:00:00Z  ultratrimfast.com  google.com  Male   UK      1953        17     17.31
-2011-01-01T02:00:00Z  bieberfever.com    google.com  Male   UK      3194        170    34.01
+2011-01-01T01:00:00Z  Justin Bieber      1 12    45
+2011-01-01T01:00:00Z  Ke$ha              2 30    80
 ~~~
 
 ## Core Data Structure
