@@ -3,3 +3,4 @@ build/
 compile
 *.hi
 *.o
+.DS_Store

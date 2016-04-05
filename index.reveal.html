@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title></title>
+<meta name="description" content="">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="stylesheet" href=".reveal.js-3.2.0/css/reveal.css">
+  <link rel="stylesheet" href=".reveal.js-3.2.0/css/theme/default.css" id="theme">
+<!-- For syntax highlighting -->
+  <link rel="stylesheet" href=".reveal.js-3.2.0/lib/css/zenburn.css">
+<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+<script>
+  document.write( '<link rel="stylesheet" href=".reveal.js-3.2.0/css/print/' +
+    ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) +
+    '.css" type="text/css" media="print">' );
+</script>
+<!--[if lt IE 9]>
+<script src=".reveal.js-3.2.0/lib/js/html5shiv.js"></script>
+<![endif]-->
+</head>
+<body>
+
+<div class="reveal">
+
+<!-- Any section element inside of this container is displayed as a slide -->
+<div class="slides">
+
+<section>
+<h1></h1>
+
+<p>
+<h4></h4>
+</p>
+</section>
+
+
+<p>Generated documents:</p>
+<ul>
+<li>Druid:
+<ul>
+<li><a href="druid/druid.html">druid doc</a></li>
+<li><a href="druid/druid.pdf">druid pdf</a></li>
+<li><a href="druid/druid.reveal.html">druid html pres</a></li>
+<li><a href="druid/druid.beamer.pdf">druid pdf pres</a></li>
+</ul></li>
+<li>README:
+<ul>
+<li><a href="README.html">README doc</a></li>
+<li><a href="README.pdf">README pdf</a></li>
+<li><a href="README.reveal.html">README html pres</a></li>
+<li><a href="README.beamer.pdf">README pdf pres</a></li>
+</ul></li>
+</ul>
+</div>
+
+<script src=".reveal.js-3.2.0/lib/js/head.min.js"></script>
+<script src=".reveal.js-3.2.0/js/reveal.js"></script>
+
+<script>
+  // Full list of configuration options available here:
+  // https://github.com/hakimel/reveal.js#configuration
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: false,
+
+  // available themes are in /css/theme
+      theme: Reveal.getQueryHash().theme || 'default',
+  
+  // default/cube/page/concave/zoom/linear/fade/none
+      transition: Reveal.getQueryHash().transition || 'linear',
+  
+  // Optional libraries used to extend on reveal.js
+  dependencies: [
+    { src: '/.reveal.js-3.2.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+    { src: '/.reveal.js-3.2.0/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+    { src: '/.reveal.js-3.2.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+    { src: '/.reveal.js-3.2.0/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+    { src: '/.reveal.js-3.2.0/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+    { src: '/.reveal.js-3.2.0/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+  ]
+  });
+
+</script>
+
+</body>
+</html>

@@ -101,7 +101,7 @@
 </section>
 <section id="return-of-experience" class="level1">
 <h1>Return of Experience</h1>
-<p><img src="img/mongoDB.png" alt="MongoDB the destroyer" /> </p>
+<p><img src="img/MongoDB.png" alt="MongoDB the destroyer" /> </p>
 </section>
 <section id="return-of-experience-1" class="level1">
 <h1>Return of Experience</h1>
@@ -292,78 +292,8 @@
 <li><strong>Metric columns</strong>: used for aggregations (count, sum, mean, etc...)</li>
 </ul>
 </section>
-</section>
-<section id="roll-up" class="level1">
-<h1>Roll-up</h1>
-<section id="example" class="level2">
-<h2>Example</h2>
-<pre><code>timestamp             page          ... added  deleted
-2011-01-01T00:01:35Z  Justin Bieber     10      65
-2011-01-01T00:03:63Z  Justin Bieber     15      62
-2011-01-01T01:04:51Z  Justin Bieber     32      45
-2011-01-01T01:01:00Z  Ke$ha             17      87
-2011-01-01T01:02:00Z  Ke$ha             43      99
-2011-01-01T02:03:00Z  Ke$ha             12      53</code></pre>
-<pre><code>timestamp             page          ... nb added deleted
-2011-01-01T00:00:00Z  Justin Bieber      2 25    127
-2011-01-01T01:00:00Z  Justin Bieber      1 32    45
-2011-01-01T01:00:00Z  Ke$ha              2 60    186
-2011-01-01T02:00:00Z  Ke$ha              1 12    53</code></pre>
-</section>
-<section id="as-sql" class="level2">
-<h2>as SQL</h2>
-<pre><code>GROUP BY timestamp, page, nb, added, deleted
-  :: nb = COUNT(1)
-  ,  added = SUM(added)
-  ,  deleted = SUM(deleted)</code></pre>
-<p>In practice can dramatically reduce the size (up to x100)</p>
-</section>
-</section>
-<section id="sharding" class="level1">
-<h1>Sharding</h1>
-<section id="segments" class="level2">
-<h2>Segments</h2>
-<p><small><code>sampleData_2011-01-01T01:00:00:00Z_2011-01-01T02:00:00:00Z_v1_0</code></small></p>
-<pre><code>2011-01-01T01:00:00Z  Justin Bieber      1 20    45
-2011-01-01T01:00:00Z  Ke$ha              1 30    106</code></pre>
-<p><small><code>sampleData_2011-01-01T01:00:00:00Z_2011-01-01T02:00:00:00Z_v1_0</code></small></p>
-<pre><code>2011-01-01T01:00:00Z  Justin Bieber      1 12    45
-2011-01-01T01:00:00Z  Ke$ha              2 30    80</code></pre>
-</section>
-<section id="core-data-structure" class="level2">
-<h2>Core Data Structure</h2>
-<p><img src="img/druid-column-types.png" alt="Segment" /> </p>
-<ul>
-<li>dictionary</li>
-<li>a bitmap for each value</li>
-<li>a list of the columns values encoded using the dictionary</li>
-</ul>
-</section>
-<section id="dictionary" class="level2">
-<h2>Dictionary</h2>
-<pre><code>{ &quot;Justin Bieber&quot;: 0
-, &quot;Ke$ha&quot;: 1
-}</code></pre>
-</section>
-<section id="columnn-data" class="level2">
-<h2>Columnn Data</h2>
-<pre><code>[ 0
-, 0
-, 1
-, 1
-]</code></pre>
-</section>
-<section id="bitmaps" class="level2">
-<h2>Bitmaps</h2>
-<p>one for each value of the column</p>
-<pre><code>value=&quot;Justin Bieber&quot;: [1,1,0,0]
-value=&quot;Ke$ha&quot;: [0,0,1,1]</code></pre>
-</section>
-</section>
-<section id="data-1" class="level1">
-<h1>Data</h1>
-<section id="indexing-data" class="level2">
-<h2>Indexing Data</h2>
+<section id="indexing" class="level2">
+<h2>Indexing</h2>
 <ul>
 <li>Immutable snapshots of data</li>
 <li>data structure highly optimized for analytic queries</li>
@@ -371,40 +301,22 @@ value=&quot;Ke$ha&quot;: [0,0,1,1]</code></pre>
 <li>Indexes data on a per shard (segment) level</li>
 </ul>
 </section>
-<section id="loading-data" class="level2">
-<h2>Loading data</h2>
+<section id="loading" class="level2">
+<h2>Loading</h2>
 <ul>
 <li>Real-Time</li>
 <li>Batch</li>
 </ul>
 </section>
-<section id="querying-the-data" class="level2">
-<h2>Querying the data</h2>
+<section id="querying" class="level2">
+<h2>Querying</h2>
 <ul>
 <li>JSON over HTTP</li>
 <li>Single Table Operations, no joins.</li>
 </ul>
 </section>
-<section id="columnar-storage" class="level2">
-<h2>Columnar Storage</h2>
-</section>
-<section id="index" class="level2">
-<h2>Index</h2>
-<ul>
-<li>Values are dictionary encoded</li>
-</ul>
-<p><code>{&quot;USA&quot; 1, &quot;Canada&quot; 2, &quot;Mexico&quot; 3, ...}</code></p>
-<ul>
-<li>Bitmap for every dimension value (used by filters)</li>
-</ul>
-<p><code>&quot;USA&quot; -&gt; [0 1 0 0 1 1 0 0 0]</code></p>
-<ul>
-<li>Column values (used by aggergation queries)</li>
-</ul>
-<p><code>[2,1,3,15,1,1,2,8,7]</code></p>
-</section>
-<section id="data-segments" class="level2">
-<h2>Data Segments</h2>
+<section id="segments" class="level2">
+<h2>Segments</h2>
 <ul>
 <li>Per time interval
 <ul>
@@ -421,6 +333,77 @@ value=&quot;Ke$ha&quot;: [0,0,1,1]</code></pre>
 <li>Read-write concurrency</li>
 </ul></li>
 </ul>
+</section>
+</section>
+<section id="roll-up" class="level1">
+<h1>Roll-up</h1>
+<section id="example" class="level2">
+<h2>Example</h2>
+<pre><code>timestamp             page    ... added  deleted
+2011-01-01T00:01:35Z  Cthulhu     10      65
+2011-01-01T00:03:63Z  Cthulhu     15      62
+2011-01-01T01:04:51Z  Cthulhu     32      45
+2011-01-01T01:01:00Z  Azatoth     17      87
+2011-01-01T01:02:00Z  Azatoth     43      99
+2011-01-01T02:03:00Z  Azatoth     12      53</code></pre>
+<pre><code>timestamp             page    ... nb added deleted
+2011-01-01T00:00:00Z  Cthulhu      2 25    127
+2011-01-01T01:00:00Z  Cthulhu      1 32    45
+2011-01-01T01:00:00Z  Azatoth      2 60    186
+2011-01-01T02:00:00Z  Azatoth      1 12    53</code></pre>
+</section>
+<section id="as-sql" class="level2">
+<h2>as SQL</h2>
+<pre><code>GROUP BY timestamp, page, nb, added, deleted
+  :: nb = COUNT(1)
+  ,  added = SUM(added)
+  ,  deleted = SUM(deleted)</code></pre>
+<p>In practice can dramatically reduce the size (up to x100)</p>
+</section>
+</section>
+<section id="segments-1" class="level1">
+<h1>Segments</h1>
+<section id="sharding" class="level2">
+<h2>Sharding</h2>
+<p><small><code>sampleData_2011-01-01T01:00:00:00Z_2011-01-01T02:00:00:00Z_v1_0</code></small></p>
+<pre><code>timestamp             page    ... nb added deleted
+2011-01-01T01:00:00Z  Cthulhu      1 20    45
+2011-01-01T01:00:00Z  Azatoth      1 30    106</code></pre>
+<p><small><code>sampleData_2011-01-01T01:00:00:00Z_2011-01-01T02:00:00:00Z_v1_0</code></small></p>
+<pre><code>timestamp             page    ... nb added deleted
+2011-01-01T01:00:00Z  Cthulhu      1 12    45
+2011-01-01T01:00:00Z  Azatoth      2 30    80</code></pre>
+</section>
+<section id="core-data-structure" class="level2">
+<h2>Core Data Structure</h2>
+<p><img src="img/druid-column-types.png" alt="Segment" /> </p>
+<ul>
+<li>dictionary</li>
+<li>a bitmap for each value</li>
+<li>a list of the columns values encoded using the dictionary</li>
+</ul>
+</section>
+<section id="example-1" class="level2">
+<h2>Example</h2>
+<pre><code>dictionary: { &quot;Cthulhu&quot;: 0
+            , &quot;Azatoth&quot;: 1 }
+
+column data: [0, 0, 1, 1]
+
+bitmaps (one for each value of the column):
+value=&quot;Cthulhu&quot;: [1,1,0,0]
+value=&quot;Azatoth&quot;: [0,0,1,1]</code></pre>
+</section>
+<section id="example-multiple-matches" class="level2">
+<h2>Example (multiple matches)</h2>
+<pre><code>dictionary: { &quot;Cthulhu&quot;: 0
+            , &quot;Azatoth&quot;: 1 }
+
+column data: [0, [0,1], 1, 1]
+
+bitmaps (one for each value of the column):
+value=&quot;Cthulhu&quot;: [1,1,0,0]
+value=&quot;Azatoth&quot;: [0,1,1,1]</code></pre>
 </section>
 <section id="real-time-ingestion" class="level2">
 <h2>Real-time ingestion</h2>
@@ -446,15 +429,13 @@ value=&quot;Ke$ha&quot;: [0,0,1,1]</code></pre>
 </section>
 <section id="real-time-ingestion-1" class="level2">
 <h2>Real-time Ingestion</h2>
-<pre><code>Task 1: [   Interval   ][ Window ]
-Task 2:                 [              ]
----------------------------------------&gt;
-                                time</code></pre>
-<p>Minimum indexing slots =<br />
- Data Sources × Partitions × Replicas × 2</p>
+<pre><code>Task 1: [   Interval          ][ Window ]
+Task 2:                        [                     ]
+-----------------------------------------------------&gt;
+                                                  time</code></pre>
 </section>
 </section>
-<section id="querying" class="level1">
+<section id="querying-1" class="level1">
 <h1>Querying</h1>
 <section id="query-types" class="level2">
 <h2>Query types</h2>
@@ -467,31 +448,30 @@ Task 2:                 [              ]
 <li>Metadata queries</li>
 </ul>
 </section>
-<section id="tip" class="level2">
-<h2>Tip</h2>
-<ul>
-<li>Prefer <code>topN</code> over <code>groupBy</code></li>
-<li>Prefer <code>timeseries</code> over <code>topN</code></li>
-<li>Use limits (and priorities)</li>
-</ul>
-</section>
-<section id="query-spec" class="level2">
-<h2>Query Spec</h2>
-<ul>
-<li>Data source</li>
-<li>Dimensions</li>
-<li>Interval</li>
-<li>Filters</li>
-<li>Aggergations</li>
-<li>Post Aggregations</li>
-<li>Granularity</li>
-<li>Context (query configuration)</li>
-<li>Limit</li>
-</ul>
-</section>
 <section id="examples" class="level2">
 <h2>Example(s)</h2>
-<p>TODO</p>
+<pre><code>{&quot;queryType&quot;: &quot;groupBy&quot;,
+ &quot;dataSource&quot;: &quot;druidtest&quot;,
+ &quot;granularity&quot;: &quot;all&quot;,
+ &quot;dimensions&quot;: [],
+ &quot;aggregations&quot;: [
+     {&quot;type&quot;: &quot;count&quot;, &quot;name&quot;: &quot;rows&quot;},
+     {&quot;type&quot;: &quot;longSum&quot;, &quot;name&quot;: &quot;imps&quot;, &quot;fieldName&quot;: &quot;impressions&quot;},
+     {&quot;type&quot;: &quot;doubleSum&quot;, &quot;name&quot;: &quot;wp&quot;, &quot;fieldName&quot;: &quot;wp&quot;}
+ ],
+ &quot;intervals&quot;: [&quot;2010-01-01T00:00/2020-01-01T00&quot;]}</code></pre>
+</section>
+<section id="result" class="level2">
+<h2>Result</h2>
+<pre><code>[ {
+  &quot;version&quot; : &quot;v1&quot;,
+  &quot;timestamp&quot; : &quot;2010-01-01T00:00:00.000Z&quot;,
+  &quot;event&quot; : {
+    &quot;imps&quot; : 5,
+    &quot;wp&quot; : 15000.0,
+    &quot;rows&quot; : 5
+  }
+} ]</code></pre>
 </section>
 <section id="caching" class="level2">
 <h2>Caching</h2>
@@ -505,21 +485,14 @@ Task 2:                 [              ]
 <li>By segment and query</li>
 <li><code>groupBy</code> is disabled on purpose!</li>
 </ul></li>
-<li>By default - local caching</li>
-</ul>
-</section>
-<section id="load-rules" class="level2">
-<h2>Load Rules</h2>
-<ul>
-<li>Can be defined</li>
-<li>What can be set</li>
+<li>By default: local caching</li>
 </ul>
 </section>
 </section>
-<section id="components" class="level1">
-<h1>Components</h1>
-<section id="druid-components" class="level2">
-<h2>Druid Components</h2>
+<section id="druid-components" class="level1">
+<h1>Druid Components</h1>
+<section id="druid-1" class="level2">
+<h2>Druid</h2>
 <ul>
 <li>Real-time Nodes</li>
 <li>Historical Nodes</li>
@@ -530,59 +503,34 @@ Task 2:                 [              ]
 <li>Overlord</li>
 <li>Middle Manager</li>
 </ul></li>
-<li>Deep Storage</li>
-<li><p>Metadata Storage</p></li>
+</ul>
+</section>
+<section id="also" class="level2">
+<h2>Also</h2>
+<ul>
+<li>Deep Storage (S3, HDFS, ...)</li>
+<li>Metadata Storage (SQL)</li>
 <li>Load Balancer</li>
-<li><p>Cache</p></li>
+<li>Cache</li>
 </ul>
 </section>
 <section id="coordinator" class="level2">
 <h2>Coordinator</h2>
-<p>Manage Segments</p>
-</section>
-<section id="real-time-nodes" class="level2">
-<h2>Real-time Nodes</h2>
 <ul>
-<li>Pulling data in real-time</li>
-<li>Indexing it</li>
-</ul>
-</section>
-<section id="historical-nodes" class="level2">
-<h2>Historical Nodes</h2>
+<li>Real-time Nodes (pull data, index it)</li>
+<li>Historical Nodes (keep old segments)</li>
+<li>Broker Nodes (route queries to RT &amp; Hist. nodes, merge)</li>
+<li>Coordinator (manage segemnts)</li>
+<li>For indexing:
 <ul>
-<li>Keep historical segments</li>
-</ul>
-</section>
-<section id="overlord" class="level2">
-<h2>Overlord</h2>
-<ul>
-<li>Accepts tasks and distributes them to middle manager</li>
-</ul>
-</section>
-<section id="middle-manager" class="level2">
-<h2>Middle Manager</h2>
-<ul>
-<li>Execute submitted tasks via Peons</li>
-</ul>
-</section>
-<section id="broker-nodes" class="level2">
-<h2>Broker Nodes</h2>
-<ul>
-<li>Route query to Real-time and Historical nodes</li>
-<li>Merge results</li>
-</ul>
-</section>
-<section id="deep-storage" class="level2">
-<h2>Deep Storage</h2>
-<ul>
-<li>Segments backup (HDFS, S3, ...)</li>
+<li>Overlord (distribute task to the middle manager)</li>
+<li>Middle Manager (execute tasks via Peons)</li>
+</ul></li>
 </ul>
 </section>
 </section>
-<section id="considerations-tools" class="level1">
-<h1>Considerations &amp; Tools</h1>
-<section id="when-not-to-choose-druid" class="level2">
-<h2>When <em>not</em> to choose Druid</h2>
+<section id="when-not-to-choose-druid" class="level1">
+<h1>When <em>not</em> to choose Druid</h1>
 <ul>
 <li>Data is not time-series</li>
 <li>Cardinality is <em>very</em> high</li>
@@ -590,20 +538,45 @@ Task 2:                 [              ]
 <li>Setup cost must be avoided</li>
 </ul>
 </section>
-<section id="graphite-metrics" class="level2">
-<h2>Graphite (metrics)</h2>
+<section id="graphite-metrics" class="level1">
+<h1>Graphite (metrics)</h1>
 <p><img src="img/graphite.png" alt="Graphite" />__</p>
 <p><a href="http://graphite.wikidot.com">Graphite</a></p>
 </section>
-<section id="pivot-exploring-data" class="level2">
-<h2>Pivot (exploring data)</h2>
+<section id="pivot-exploring-data" class="level1">
+<h1>Pivot (exploring data)</h1>
 <p><img src="img/pivot.gif" alt="Pivot" /> </p>
 <p><a href="https://github.com/implydata/pivot">Pivot</a></p>
 </section>
-<section id="caravel-exploring-data" class="level2">
-<h2>Caravel (exploring data)</h2>
+<section id="caravel" class="level1">
+<h1>Caravel</h1>
 <p><img src="img/caravel.png" alt="caravel" /> </p>
 <p><a href="https://github.com/airbnb/caravel">Caravel</a></p>
+</section>
+<section id="conclusions" class="level1">
+<h1>Conclusions</h1>
+<section id="precompute-your-time-series" class="level2">
+<h2>Precompute your time series?</h2>
+<p><img src="img/wrong.jpg" alt="You&#39;re doing it wrong" /> </p>
+</section>
+<section id="dont-reinvent-it" class="level2">
+<h2>Don't reinvent it</h2>
+<ul>
+<li>need a user facing API</li>
+<li>need time series on many dimensions</li>
+<li>need real-time</li>
+<li>big volume of data</li>
+</ul>
+</section>
+<section id="druid-way-is-the-right-way" class="level2">
+<h2>Druid way is the right way!</h2>
+<ol type="1">
+<li>Push in kafka</li>
+<li>Add the right dimensions</li>
+<li>Push in druid</li>
+<li>???</li>
+<li>Profit!</li>
+</ol>
 </section>
 </section>
 </div>
