@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title></title>
+<meta name="description" content="">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="stylesheet" href=".reveal.js-3.2.0/css/reveal.css">
+  <link rel="stylesheet" href=".reveal.js-3.2.0/css/theme/metropolis.css" id="theme">
+<!-- For syntax highlighting -->
+  <link rel="stylesheet" href=".reveal.js-3.2.0/lib/css/zenburn.css">
+<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+<script>
+  document.write( '<link rel="stylesheet" href=".reveal.js-3.2.0/css/print/' +
+    ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) +
+    '.css" type="text/css" media="print">' );
+</script>
+<!--[if lt IE 9]>
+<script src=".reveal.js-3.2.0/lib/js/html5shiv.js"></script>
+<![endif]-->
+</head>
+<body>
+
+<div class="reveal">
+
+<!-- Any section element inside of this container is displayed as a slide -->
+<div class="slides">
+
+<section>
+<h1></h1>
+
+<p>
+<h4></h4>
+</p>
+</section>
+
+
+<section id="no-brainer-markdown-to-html-pdf" class="level1">
+<h1>No Brainer Markdown to HTML &amp; PDF</h1>
+<p>For each markdown files it will generate:</p>
+<ul>
+<li>an HTML Document</li>
+<li>an HTML Presentation (using reveal.js)</li>
+<li>a PDF Document (using XeLaTeX)</li>
+<li>a PDF Presentation (using Beamer)</li>
+</ul>
+<pre><code>./compile.sh</code></pre>
+<p>If you want to be the 1337, install <a href="http://haskellstack.org"><code>stack</code></a> and</p>
+<pre><code>./build.sh
+./compile</code></pre>
+<section id="dependencies" class="level2">
+<h2>Dependencies</h2>
+<ul>
+<li><a href="http://pandoc.org">pandoc</a> -- Tested with pandoc 1.15.0.6</li>
+<li><a href="http://xelatex.org">XeLaTeX</a> -- Tested with XeTeX 3.14159265-2.6-0.99992 (TeX Live 2015)</li>
+<li><a href="https://github.com/matze/mtheme">metropolis</a> Beamer theme (working forked version here: <a href="https://github.com/yogsototh/mtheme"><code>https://github.com/yogsototh/mtheme</code></a>)</li>
+</ul>
+</section>
+</section>
+</div>
+
+<script src=".reveal.js-3.2.0/lib/js/head.min.js"></script>
+<script src=".reveal.js-3.2.0/js/reveal.js"></script>
+
+<script>
+  // Full list of configuration options available here:
+  // https://github.com/hakimel/reveal.js#configuration
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: false,
+
+  // available themes are in /css/theme
+      theme: Reveal.getQueryHash().theme || 'metropolis',
+  
+  // default/cube/page/concave/zoom/linear/fade/none
+      transition: Reveal.getQueryHash().transition || 'linear',
+  
+  // Optional libraries used to extend on reveal.js
+  dependencies: [
+    { src: '/.reveal.js-3.2.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+    { src: '/.reveal.js-3.2.0/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+    { src: '/.reveal.js-3.2.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+    { src: '/.reveal.js-3.2.0/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+    { src: '/.reveal.js-3.2.0/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+    { src: '/.reveal.js-3.2.0/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+  ]
+  });
+
+</script>
+
+</body>
+</html>

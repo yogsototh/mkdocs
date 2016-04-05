@@ -3,5 +3,4 @@ build/
 compile
 *.hi
 *.o
-*.html
-*.pdf
+.DS_Store

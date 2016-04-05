@@ -57,7 +57,7 @@ date: 7 Avril 2016
 
 # Return of Experience
 
-![MongoDB the destroyer](img/mongoDB.png)\  
+![MongoDB the destroyer](img/MongoDB.png)\  
 
 # Return of Experience
 
@@ -214,26 +214,54 @@ Store data in custom column format highly optimized for aggregation & filter.
 - **Dimension columns**: strings (used to filter or to group)
 - **Metric columns**: used for aggregations (count, sum, mean, etc...)
 
+## Indexing
+
+- Immutable snapshots of data
+- data structure highly optimized for analytic queries
+- Each column is stored separately
+- Indexes data on a per shard (segment) level
+
+## Loading
+
+- Real-Time 
+- Batch
+
+## Querying
+
+- JSON over HTTP
+- Single Table Operations, no joins.
+
+## Segments
+
+- Per time interval
+    - skip segments when querying
+- Immutable
+    - Cache friendly
+    - No locking
+- Versioned
+    - No locking
+    - Read-write concurrency
+
 # Roll-up
 
 ## Example
 
 ~~~
-timestamp             page          ... added  deleted
-2011-01-01T00:01:35Z  Justin Bieber     10      65
-2011-01-01T00:03:63Z  Justin Bieber     15      62
-2011-01-01T01:04:51Z  Justin Bieber     32      45
-2011-01-01T01:01:00Z  Ke$ha             17      87
-2011-01-01T01:02:00Z  Ke$ha             43      99
-2011-01-01T02:03:00Z  Ke$ha             12      53
+timestamp             page    ... added  deleted
+2011-01-01T00:01:35Z  Cthulhu     10      65
+2011-01-01T00:03:63Z  Cthulhu     15      62
+2011-01-01T01:04:51Z  Cthulhu     32      45
+2011-01-01T01:01:00Z  Azatoth     17      87
+2011-01-01T01:02:00Z  Azatoth     43      99
+2011-01-01T02:03:00Z  Azatoth     12      53
 ~~~
 
 ~~~
-timestamp             page          ... nb added deleted
-2011-01-01T00:00:00Z  Justin Bieber      2 25    127
-2011-01-01T01:00:00Z  Justin Bieber      1 32    45
-2011-01-01T01:00:00Z  Ke$ha              2 60    186
-2011-01-01T02:00:00Z  Ke$ha              1 12    53
+timestamp             page    ... nb added deleted
+2011-01-01T00:00:00Z  Cthulhu      2 25    127
+2011-01-01T01:00:00Z  Cthulhu      1 32    45
+2011-01-01T01:00:00Z  Azatoth      2 60    186
+2011-01-01T02:00:00Z  Azatoth      1 12    53
 ~~~
 
 ## as SQL
@@ -247,22 +275,25 @@ GROUP BY timestamp, page, nb, added, deleted
 
 In practice can dramatically reduce the size (up to x100)
 
-# Sharding
 
-## Segments
+# Segments
 
-<small>`sampleData_2011-01-01T01:00:00:00Z_2011-01-01T02:00:00:00Z_v1_0`</small>
-
-~~~
-2011-01-01T01:00:00Z  Justin Bieber      1 20    45
-2011-01-01T01:00:00Z  Ke$ha              1 30    106
-~~~
+## Sharding
 
 <small>`sampleData_2011-01-01T01:00:00:00Z_2011-01-01T02:00:00:00Z_v1_0`</small>
 
 ~~~
-2011-01-01T01:00:00Z  Justin Bieber      1 12    45
-2011-01-01T01:00:00Z  Ke$ha              2 30    80
+timestamp             page    ... nb added deleted
+2011-01-01T01:00:00Z  Cthulhu      1 20    45
+2011-01-01T01:00:00Z  Azatoth      1 30    106
+~~~
+
+<small>`sampleData_2011-01-01T01:00:00:00Z_2011-01-01T02:00:00:00Z_v1_0`</small>
+
+~~~
+timestamp             page    ... nb added deleted
+2011-01-01T01:00:00Z  Cthulhu      1 12    45
+2011-01-01T01:00:00Z  Azatoth      2 30    80
 ~~~
 
 ## Core Data Structure
@@ -273,78 +304,32 @@ In practice can dramatically reduce the size (up to x100)
 - a bitmap for each value
 - a list of the columns values encoded using the dictionary
 
-## Dictionary
+## Example
 
 ~~~
-{ "Justin Bieber": 0
-, "Ke$ha": 1
-}
+dictionary: { "Cthulhu": 0
+            , "Azatoth": 1 }
+
+column data: [0, 0, 1, 1]
+
+bitmaps (one for each value of the column):
+value="Cthulhu": [1,1,0,0]
+value="Azatoth": [0,0,1,1]
 ~~~
 
-## Columnn Data
+## Example (multiple matches)
 
 ~~~
-[ 0
-, 0
-, 1
-, 1
-]
+dictionary: { "Cthulhu": 0
+            , "Azatoth": 1 }
+
+column data: [0, [0,1], 1, 1]
+
+bitmaps (one for each value of the column):
+value="Cthulhu": [1,1,0,0]
+value="Azatoth": [0,1,1,1]
 ~~~
 
-## Bitmaps
-
-one for each value of the column
-
-~~~
-value="Justin Bieber": [1,1,0,0]
-value="Ke$ha": [0,0,1,1]
-~~~
-
-# Data
-
-## Indexing Data
-
-- Immutable snapshots of data
-- data structure highly optimized for analytic queries
-- Each column is stored separately
-- Indexes data on a per shard (segment) level
-
-## Loading data
-
-- Real-Time 
-- Batch
-
-## Querying the data
-
-- JSON over HTTP
-- Single Table Operations, no joins.
-
-## Columnar Storage
-
-## Index
-
-- Values are dictionary encoded
-
-`{"USA" 1, "Canada" 2, "Mexico" 3, ...}`
-
-- Bitmap for every dimension value (used by filters)
-
-`"USA" -> [0 1 0 0 1 1 0 0 0]`
-
-- Column values (used by aggergation queries)
-
-`[2,1,3,15,1,1,2,8,7]`
-
-## Data Segments
-
-- Per time interval
-    - skip segments when querying
-- Immutable
-    - Cache friendly
-    - No locking
-- Versioned
-    - No locking
-    - Read-write concurrency
   
 ## Real-time ingestion
 
@@ -363,14 +348,11 @@ value="Ke$ha": [0,0,1,1]
 ## Real-time Ingestion
 
 ~~~
-Task 1: [   Interval   ][ Window ]
-Task 2:                 [              ]
---------------------------------------->
-                                time
+Task 1: [   Interval          ][ Window ]
+Task 2:                        [                     ]
+----------------------------------------------------->
+                                                  time
 ~~~
-
-Minimum indexing slots =  
-  Data Sources × Partitions × Replicas × 2
 
 # Querying
 
@@ -383,27 +365,34 @@ Minimum indexing slots =
 - Time Boundary: Find available data timeframe
 - Metadata queries
 
-## Tip
-
-- Prefer `topN` over `groupBy`
-- Prefer `timeseries` over `topN`
-- Use limits (and priorities)
-
-## Query Spec
-
-- Data source
-- Dimensions
-- Interval
-- Filters
-- Aggergations
-- Post Aggregations
-- Granularity
-- Context (query configuration)
-- Limit
-
 ## Example(s)
 
-TODO
+~~~
+{"queryType": "groupBy",
+ "dataSource": "druidtest",
+ "granularity": "all",
+ "dimensions": [],
+ "aggregations": [
+     {"type": "count", "name": "rows"},
+     {"type": "longSum", "name": "imps", "fieldName": "impressions"},
+     {"type": "doubleSum", "name": "wp", "fieldName": "wp"}
+ ],
+ "intervals": ["2010-01-01T00:00/2020-01-01T00"]}
+~~~
+
+## Result
+
+~~~
+[ {
+  "version" : "v1",
+  "timestamp" : "2010-01-01T00:00:00.000Z",
+  "event" : {
+    "imps" : 5,
+    "wp" : 15000.0,
+    "rows" : 5
+  }
+} ]
+~~~
 
 ## Caching
 
@@ -412,16 +401,11 @@ TODO
 - Broker Level
     - By segment and query
     - `groupBy` is disabled on purpose!
-- By default - local caching
+- By default: local caching
 
-## Load Rules
+# Druid Components
 
-- Can be defined
-- What can be set
-
-# Components
-
-## Druid Components
+## Druid
 
 - Real-time Nodes
 - Historical Nodes
@@ -431,65 +415,65 @@ TODO
     - Overlord
     - Middle Manager
 
-+ Deep Storage
-+ Metadata Storage
+## Also
 
-+ Load Balancer
-+ Cache
+- Deep Storage (S3, HDFS, ...)
+- Metadata Storage (SQL)
+- Load Balancer
+- Cache
 
 ## Coordinator
 
-Manage Segments
+- Real-time Nodes (pull data, index it)
+- Historical Nodes (keep old segments)
+- Broker Nodes (route queries to RT & Hist. nodes, merge)
+- Coordinator (manage segemnts)
+- For indexing:
+    - Overlord (distribute task to the middle manager)
+    - Middle Manager (execute tasks via Peons)
 
-## Real-time Nodes
-
-- Pulling data in real-time
-- Indexing it
-
-## Historical Nodes
-
-- Keep historical segments
-
-## Overlord
-
-- Accepts tasks and distributes them to middle manager
-
-## Middle Manager
-
-- Execute submitted tasks via Peons
-
-## Broker Nodes
-
-- Route query to Real-time and Historical nodes
-- Merge results
-
-## Deep Storage
-
-- Segments backup (HDFS, S3, ...)
-
-# Considerations & Tools
-
-## When *not* to choose Druid
+# When *not* to choose Druid
 
 - Data is not time-series
 - Cardinality is _very_ high
 - Number of dimensions is high
 - Setup cost must be avoided
 
-## Graphite (metrics)
+# Graphite (metrics)
 
 ![Graphite](img/graphite.png)\__
 
 [Graphite](http://graphite.wikidot.com)
 
-## Pivot (exploring data)
+# Pivot (exploring data)
 
 ![Pivot](img/pivot.gif)\  
 
 [Pivot](https://github.com/implydata/pivot)
 
-## Caravel (exploring data)
+# Caravel
 
 ![caravel](img/caravel.png)\  
 
 [Caravel](https://github.com/airbnb/caravel)
+
+# Conclusions
+
+## Precompute your time series?
+
+![You're doing it wrong](img/wrong.jpg)\  
+
+## Don't reinvent it
+
+- need a user facing API
+- need time series on many dimensions
+- need real-time
+- big volume of data
+
+## Druid way is the right way!
+
+1. Push in kafka
+2. Add the right dimensions
+3. Push in druid
+4. ???
+5. Profit!
