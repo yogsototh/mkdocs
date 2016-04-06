@@ -1,3 +1,5 @@
+# Welcome to `mkdocs`
+
 Public url: <http://yogsototh.github.io/mkdocs>
 
 Generated documents:
