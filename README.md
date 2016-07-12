@@ -5,10 +5,10 @@ theme: metropolis
 
 For each markdown files it will generate:
 
-- an HTML Document
-- an HTML Presentation (using reveal.js)
-- a PDF Document (using XeLaTeX)
-- a PDF Presentation (using Beamer)
+- an HTML Document: [example](https://github.com/yogsototh/mkdocs/druid/druid.html)
+- an HTML Presentation (using reveal.js): [example](https://github.com/yogsototh/mkdocs/druid/druid.reveal.html)
+- a PDF Document (using XeLaTeX): [example](https://github.com/yogsototh/mkdocs/druid/druid.pdf)
+- a PDF Presentation (using Beamer): [example](https://github.com/yogsototh/mkdocs/druid/druid.beamer.pdf)
 
 ~~~
 ./compile.sh
