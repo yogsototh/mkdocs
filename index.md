@@ -14,3 +14,8 @@ Generated documents:
     - [README pdf](README.pdf)
     - [README html pres](README.reveal.html)
     - [README pdf pres](README.beamer.pdf)
+- My Resume:
+    - [resume doc](resume/resume.html)
+    - [resume pdf](resume/resume.pdf)
+    - [resume html pres](resume/resume.reveal.html)
+    - [resume pdf pres](resume/resume.beamer.pdf)
