@@ -98,18 +98,13 @@ img{display:block;margin:0px auto;padding:0px;max-width:100%}
 figcaption{margin:5px 10px 5px 30px}
 .footnotes{color:#666;font-size:70%;font-style:italic}
 .footnotes li p:last-child a:last-child{border-bottom:none}
-
-#footer,#TOC {
-    padding: 2em;
-    margin: 2em 0;
-}
-#footer { border-top: dotted 1px; }
-pre > code {
-    background-color: rgba(255,255,255,0.5);
-}
-pre { overflow: scroll; }
-body { line-height: 1.5em; color: #586E75;}
-tr.even{background-color:#eee8d5;}
-tr.odd{background-color:#fdf6e3;}
+#footer,#TOC {padding: 2em; margin: 2em 0;}
+#footer {border-top: dotted 1px; }
+pre > code {background-color: rgba(255,255,255,0.5);}
+pre {overflow: scroll;}
+body {line-height: 1.5em; color: #586E75;}
+tr.even{background-color:#dedede; color: #073642;}
+tr.odd{background-color:#f7f7f7; color: #073642;}
+tr {font-size: 16px; }
 h1,h2,h3,h4 { margin-top: 2em; font-family: "Hoefler Text"; }
 p,ul { line-height: 1.5em; }
