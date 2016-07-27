@@ -2,6 +2,9 @@
  * I add this to html files generated with pandoc.
  */
 
+$hicolor: #e67e22;
+$hicolorsnd: #d35400;
+
 html {
   font-size: 100%;
   overflow-y: scroll;
@@ -21,21 +24,21 @@ body {
 }
 
 a {
-  color: #06e;
+  color: $hicolor;
   text-decoration: none;
 }
 
 a:visited {
-  color: #06e;
+  color: $hicolorsnd;
 }
 
 a:hover {
-  color: #06e;
+  color: $hicolor;
   text-decoration: underline;
 }
 
 a:active {
-  color: #faa700;
+  color: $hicolor;
 }
 
 a:focus {

@@ -18,18 +18,18 @@ body {
   background: #fefefe; }
 
 a {
-  color: #06e;
+  color: #e67e22;
   text-decoration: none; }
 
 a:visited {
-  color: #06e; }
+  color: #d35400; }
 
 a:hover {
-  color: #06e;
+  color: #e67e22;
   text-decoration: underline; }
 
 a:active {
-  color: #faa700; }
+  color: #e67e22; }
 
 a:focus {
   outline: thin dotted; }

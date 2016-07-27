@@ -5,3 +5,4 @@ compile
 *.hi
 *.o
 .DS_Store
+*.css.map
