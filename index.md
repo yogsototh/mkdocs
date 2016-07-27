@@ -1,3 +1,9 @@
+---
+title: Welcome to `mkdocs`
+author: Yann Esposito
+date: 26 July 2016
+---
+
 # Welcome to `mkdocs`
 
 Public url: <http://yogsototh.github.io/mkdocs>

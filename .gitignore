@@ -1,6 +1,7 @@
 TAGS
 build/
 compile
+.sass-cache/
 *.hi
 *.o
 .DS_Store
