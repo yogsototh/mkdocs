@@ -24,7 +24,7 @@ and
 
 ## Dependencies
 
-- [pandoc](http://pandoc.org) -- Tested with pandoc 1.15.0.6
+- [pandoc](http://pandoc.org) -- Tested with pandoc 1.15.0.6 & 1.17.2
 - [XeLaTeX](http://xelatex.org) -- Tested with XeTeX 3.14159265-2.6-0.99992 (TeX Live 2015)
 - [metropolis](https://github.com/matze/mtheme)
   Beamer theme (working forked version here:
