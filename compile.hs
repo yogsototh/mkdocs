@@ -60,7 +60,7 @@ main = do
 -- | Find Markdown Files (skip hidden directories)
 findMarkdownFiles :: Shell FilePath
 findMarkdownFiles = do
-    fic <- find  (suffix ".md") "." & fgrep (invert (prefix "./."))
+    fic <- find  (choice [(suffix ".md"), (suffix ".org")]) "." & fgrep (invert (prefix "./."))
     let mf = stripPrefix "./" fic
     _ <- guard (isJust mf)
     return (fromJust mf)

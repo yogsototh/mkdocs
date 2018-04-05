@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="author" content="Yann Esposito">
+  <title>Introduction à la Programmation Fonctionnelle en Haskell</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="styling.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">Introduction à la Programmation Fonctionnelle en Haskell</h1>
+<p class="author">Yann Esposito</p>
+<p class="date">&lt;2018-03-15 Thu&gt;</p>
+</header>
+<nav id="TOC">
+<ul>
+<li><a href="#courte-introduction">Courte Introduction</a><ul>
+<li><a href="#prelude">Prelude</a></li>
+<li><a href="#parcours-jusquà-haskell">Parcours jusqu’à Haskell</a><ul>
+<li><a href="#parcours-pro">Parcours Pro</a></li>
+<li><a href="#langages-de-programmations-basiques">Langages de programmations basiques</a></li>
+<li><a href="#langages-de-programmations-orientés-objet">Langages de programmations orientés objet</a></li>
+<li><a href="#langages-moderne-de-script">Langages moderne de script</a></li>
+<li><a href="#langage-peu-reconnus">Langage peu (re)connus</a></li>
+<li><a href="#langages-fonctionnels">Langages fonctionnels</a></li>
+</ul></li>
+<li><a href="#quest-ce-que-la-programmation-fonctionnelle">Qu’est-ce que la programmation fonctionnelle?</a><ul>
+<li><a href="#von-neumann-architecture">Von Neumann Architecture</a></li>
+<li><a href="#von-neumann-vs-church">Von Neumann vs Church</a></li>
+<li><a href="#histoire">Histoire</a></li>
+<li><a href="#retour-dexpérience-subjectif">Retour d’expérience subjectif</a></li>
+</ul></li>
+<li><a href="#pourquoi-haskell">Pourquoi Haskell?</a><ul>
+<li><a href="#simplicité-par-labstraction">Simplicité par l’abstraction</a></li>
+<li><a href="#production-ready">Production Ready™</a></li>
+<li><a href="#tooling">Tooling</a></li>
+<li><a href="#qualité">Qualité</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#premiers-pas-en-haskell">Premiers Pas en Haskell</a><ul>
+<li><a href="#hello-world-13">Hello World! (1/3)</a></li>
+<li><a href="#hello-world-23">Hello World! (2/3)</a></li>
+<li><a href="#hello-world-33">Hello World! (3/3)</a></li>
+<li><a href="#what-is-your-name">What is your name?</a><ul>
+<li><a href="#what-is-your-name-13">What is your name? (1/3)</a></li>
+<li><a href="#what-is-your-name-23">What is your name? (2/3)</a></li>
+<li><a href="#what-is-your-name-33">What is your name? (3/3)</a></li>
+</ul></li>
+<li><a href="#erreurs-classiques">Erreurs classiques</a><ul>
+<li><a href="#erreur-classique-1">Erreur classique #1</a></li>
+<li><a href="#erreur-classique-1-1">Erreur classique #1</a></li>
+<li><a href="#erreur-classique-2">Erreur classique #2</a></li>
+<li><a href="#erreur-classique-2-fix">Erreur classique #2 (fix)</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#concepts-avec-exemples">Concepts avec exemples</a><ul>
+<li><a href="#concepts">Concepts</a></li>
+<li><a href="#pureté-function-vs-proceduresubroutines"><em>Pureté</em>: Function vs Procedure/Subroutines</a></li>
+<li><a href="#pureté-function-vs-proceduresubroutines-exemple"><em>Pureté</em>: Function vs Procedure/Subroutines (exemple)</a></li>
+<li><a href="#pureté-gain-paralellisation-gratuite"><em>Pureté</em>: Gain, paralellisation gratuite</a></li>
+<li><a href="#pureté-structures-de-données-immuable"><em>Pureté</em>: Structures de données immuable</a></li>
+<li><a href="#évaluation-parraisseuse-stratégies-dévaluations"><em>Évaluation parraisseuse</em>: Stratégies d’évaluations</a></li>
+<li><a href="#évaluation-parraisseuse-exemple-1"><em>Évaluation parraisseuse</em>: Exemple 1</a></li>
+<li><a href="#évaluation-parraisseuse-structures-de-données-infinies-zip"><em>Évaluation parraisseuse</em>: Structures de données infinies (zip)</a></li>
+<li><a href="#adt-typage-polymorphique"><em>ADT &amp; Typage polymorphique</em></a></li>
+<li><a href="#adt-typage-polymorphique-inférence-de-type"><em>ADT &amp; Typage polymorphique</em>: Inférence de type</a></li>
+<li><a href="#composabilité">Composabilité</a><ul>
+<li><a href="#composabilité-vs-modularité">Composabilité vs Modularité</a></li>
+<li><a href="#exemples">Exemples</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#catégories-de-bugs-évités-avec-haskell">Catégories de bugs évités avec Haskell</a><ul>
+<li><a href="#real-productions-bugs">Real Productions Bugs™</a></li>
+<li><a href="#null-pointer-exception-erreur-classique-1">Null Pointer Exception: Erreur classique (1)</a></li>
+<li><a href="#null-pointer-exception-erreur-classique-2">Null Pointer Exception: Erreur classique (2)</a></li>
+<li><a href="#null-pointer-exception-data-type-maybe">Null Pointer Exception: Data type <code>Maybe</code></a></li>
+<li><a href="#null-pointer-excepton-etat">Null Pointer Excepton: Etat</a></li>
+<li><a href="#erreur-due-à-une-typo">Erreur due à une typo</a></li>
+<li><a href="#echange-de-parameters">Echange de parameters</a></li>
+<li><a href="#changement-intempestif-dun-etat-global">Changement intempestif d’un Etat Global</a></li>
+</ul></li>
+<li><a href="#organisation-du-code">Organisation du Code</a><ul>
+<li><a href="#grands-concepts">Grands Concepts</a></li>
+<li><a href="#monades">Monades</a></li>
+<li><a href="#effets">Effets</a></li>
+<li><a href="#exemple-dans-un-code-réel-1">Exemple dans un code réel (1)</a></li>
+<li><a href="#exemple-dans-un-code-réel-2">Exemple dans un code réel (2)</a></li>
+<li><a href="#règles-pragmatiques">Règles <strong>pragmatiques</strong></a><ul>
+<li><a href="#organisation-en-fonction-de-la-complexité">Organisation en fonction de la complexité</a></li>
+<li><a href="#couches">3 couches</a></li>
+<li><a href="#services-lib">Services / Lib</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#conclusion">Conclusion</a><ul>
+<li><a href="#pourquoi-haskell-1">Pourquoi Haskell?</a></li>
+<li><a href="#avantage-compétitif">Avantage compétitif</a></li>
+</ul></li>
+<li><a href="#appendix">Appendix</a><ul>
+<li><a href="#stm-exemple-concurrence-12">STM: Exemple (Concurrence) (1/2)</a></li>
+<li><a href="#stm-exemple-concurrence-22">STM: Exemple (Concurrence) (2/2)</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="courte-introduction">Courte Introduction</h1>
+<h2 id="prelude">Prelude</h2>
+<p>Initialiser l’env de dev:</p>
+<pre class="shell"><code>curl -sSL https://get.haskellstack.org/ | sh
+stack new ipfh https://git.io/vbpej &amp;&amp; \
+cd ipfh &amp;&amp; \
+stack setup &amp;&amp; \
+stack build &amp;&amp; \
+stack test &amp;&amp; \
+stack bench
+</code></pre>
+<h2 id="parcours-jusquà-haskell">Parcours jusqu’à Haskell</h2>
+<h3 id="parcours-pro">Parcours Pro</h3>
+<ul>
+<li>Doctorat (machine learning, hidden markov models) 2004</li>
+<li>Post doc (écriture d’un UI pour des biologistes en Java). 2006</li>
+<li>Dev Airfrance, (Perl, scripts shell, awk, HTML, CSS, JS, XML…) 2006 → 2013</li>
+<li>Dev (ruby, C, ML) pour GridPocket. (dev) 2009 → 2011, (impliqué) 2009 →</li>
+<li>Clojure dev &amp; Machine Learning pour Vigiglobe. 2013 → 2016</li>
+<li>Senior Clojure développeur chez Cisco. 2016 →</li>
+</ul>
+<h3 id="langages-de-programmations-basiques">Langages de programmations basiques</h3>
+<ol>
+<li>BASIC (MO5, Amstrad CPC 6129, Atari STf)</li>
+<li>Logo (école primaire, + écriture d’un cours en 1ère année de Fac)</li>
+<li>Pascal (lycée, fac)</li>
+<li>C (fac)</li>
+<li>ADA (fac)</li>
+</ol>
+<h3 id="langages-de-programmations-orientés-objet">Langages de programmations orientés objet</h3>
+<ol>
+<li>C++ (fac + outils de recherche pour doctorat)</li>
+<li>Eiffel (fac)</li>
+<li>Java (fac, UI en Java 1.6, Swing pour postdoc)</li>
+<li>Objective-C (temps personnel, app iPhone, app Mac, Screensavers)</li>
+</ol>
+<h3 id="langages-moderne-de-script">Langages moderne de script</h3>
+<ol>
+<li>PHP (fac, site perso)</li>
+<li>Python (fac, projets perso, jeux, etc…)</li>
+<li>Awk (fac, Airfrance, …)</li>
+<li>Perl (Airfrance…)</li>
+<li>Ruby (GridPocket, site perso v2)</li>
+<li>Javascript:
+<ul>
+<li><em>Airfrance</em> basic prototype, jquery, etc..,</li>
+<li>spine.js</li>
+<li>backbone.js</li>
+<li>Coffeescript</li>
+<li>Cappuccino (Objective-J)</li>
+<li>Sproutcore</li>
+<li><em>Vigiglobe</em> actionhero (nodejs), angularjs v1</li>
+</ul></li>
+</ol>
+<h3 id="langage-peu-reconnus">Langage peu (re)connus</h3>
+<ol>
+<li>Metapost</li>
+<li>zsh (quasi lang de prog)</li>
+<li>prolog</li>
+</ol>
+<h3 id="langages-fonctionnels">Langages fonctionnels</h3>
+<ol>
+<li>CamL</li>
+<li>Haskell (Vigiglobe, personnal)</li>
+<li>Clojure (Vigiglobe, Cisco)</li>
+</ol>
+<h2 id="quest-ce-que-la-programmation-fonctionnelle">Qu’est-ce que la programmation fonctionnelle?</h2>
+<h3 id="von-neumann-architecture">Von Neumann Architecture</h3>
+<pre><code>           +--------------------------------+
+           | +----------------------------+ |
+           | | central processing unit    | |
+           | | +------------------------+ | |
+           | | |     Control Unit       | | |
++------+   | | +------------------------+ | |  +--------+
+|input +---&gt; | +------------------------+ | +--&gt; output |
++------+   | | |  Arithmetic/Logic Unit | | |  +--------+
+           | | +------------------------+ | |
+           | +-------+---^----------------+ |
+           |         |   |                  |
+           | +-------v---+----------------+ |
+           | |     Memory Unit            | |
+           | +----------------------------+ |
+           +--------------------------------+
+</code></pre>
+<p>made with <a href="http://asciiflow.com" class="uri">http://asciiflow.com</a></p>
+<h3 id="von-neumann-vs-church">Von Neumann vs Church</h3>
+<ul>
+<li>programmer à partir de la machine (Von Neumann)
+<ul>
+<li>tire vers l’optimisation</li>
+<li>mots de bits, caches, détails de bas niveau</li>
+<li>actions séquentielles</li>
+<li><strong>1 siècle d’expérience</strong></li>
+</ul></li>
+</ul>
+<div class="incremental">
+<ul>
+<li>programmer comme manipulation de symbole (Alonzo Church)
+<ul>
+<li>tire vers l’abstraction</li>
+<li>plus proche des représentations mathématiques</li>
+<li>ordre d’évaluation non imposé</li>
+<li><strong>4000 ans d’expérience</strong></li>
+</ul></li>
+</ul>
+</div>
+<h3 id="histoire">Histoire</h3>
+<ul>
+<li>λ-Calculus, Alonzo Church &amp; Rosser 1936
+<ul>
+<li>Foundation, explicit side effect no implicit state</li>
+</ul></li>
+</ul>
+<div class="incremental">
+<ul>
+<li>LISP (McCarthy 1960)
+<ul>
+<li>Garbage collection, higher order functions, dynamic typing</li>
+</ul></li>
+</ul>
+</div>
+<div class="incremental">
+<ul>
+<li>ML (1969-80)
+<ul>
+<li>Static typing, Algebraic Datatypes, Pattern matching</li>
+</ul></li>
+</ul>
+</div>
+<div class="incremental">
+<ul>
+<li>Miranda (1986) → Haskell (1992‥)
+<ul>
+<li>Lazy evaluation, pure</li>
+</ul></li>
+</ul>
+</div>
+<h3 id="retour-dexpérience-subjectif">Retour d’expérience subjectif</h3>
+<p><em>pieds nus</em> (code machine, ASM)</p>
+<div class="incremental">
+<pre><code>         _
+        / \
+       /.  )  _
+   ___/ | /  / \
+.-&#39;__/  |(  (  .\
+             \ | \___
+              )|  \__`-.
+</code></pre>
+<p><em>Talons hauts</em> (C, Pascal, Java, C++, Perl, PHP, Python, Ruby, etc…)</p>
+</div>
+<div class="incremental">
+<p><em>Tennis</em> (Clojure, Scheme, LISP, etc…)</p>
+</div>
+<div class="incremental">
+<p><em>Voiture</em> (Haskell, Purescript, etc…)</p>
+</div>
+<h2 id="pourquoi-haskell">Pourquoi Haskell?</h2>
+<h3 id="simplicité-par-labstraction">Simplicité par l’abstraction</h3>
+<p><strong><code>/!\</code> SIMPLICITÉ ≠ FACILITÉ <code>/!\</code></strong></p>
+<ul>
+<li>mémoire (garbage collection)</li>
+<li>ordre d’évaluation (non strict / lazy)</li>
+<li>effets de bords (pur)</li>
+<li>manipulation de code (referential transparency)</li>
+</ul>
+<h3 id="production-ready">Production Ready™</h3>
+<ul>
+<li>rapide
+<ul>
+<li>équivalent à Java (~ x2 du C)</li>
+<li>parfois plus rapide que C</li>
+<li>bien plus rapide que python et ruby</li>
+</ul></li>
+</ul>
+<div class="incremental">
+<ul>
+<li>communauté solide
+<ul>
+<li>3k comptes sur Haskellers</li>
+<li>&gt;30k sur reddit <em>(35k rust, 45k go, 50k nodejs, 4k ocaml, 13k clojure)</em></li>
+<li>libs &gt;12k sur hackage</li>
+</ul></li>
+</ul>
+</div>
+<div class="incremental">
+<ul>
+<li>entreprises
+<ul>
+<li>Facebook (fighting spam, HAXL, …)</li>
+<li>beaucoup de startups, finance en général</li>
+</ul></li>
+</ul>
+</div>
+<div class="incremental">
+<ul>
+<li>milieu académique
+<ul>
+<li>fondations mathématiques</li>
+<li>fortes influences des chercheurs</li>
+<li>tire le langage vers le haut</li>
+</ul></li>
+</ul>
+</div>
+<h3 id="tooling">Tooling</h3>
+<ul>
+<li>compilateur (GHC)</li>
+<li>gestion de projets ; cabal, stack, hpack, etc…</li>
+<li>IDE / hlint ; rapidité des erreurs en cours de frappe</li>
+<li>frameworks hors catégorie (servant, yesod)</li>
+<li>ecosystèmes très matures et inovant
+<ul>
+<li>Elm (⇒ frontend)</li>
+<li>Purescript (⇒ frontend)</li>
+<li>GHCJS (⇒ frontend)</li>
+<li>Idris (types dépendants)</li>
+<li>Hackett (typed LISP avec macros)</li>
+</ul></li>
+</ul>
+<h3 id="qualité">Qualité</h3>
+<blockquote>
+<p><em>Si ça compile alors il probable que ça marche</em></p>
+</blockquote>
+<div class="incremental">
+<ul>
+<li>test unitaires : chercher quelques erreurs manuellements</li>
+</ul>
+</div>
+<div class="incremental">
+<ul>
+<li><em>test génératifs</em> : chercher des erreurs sur beaucoups de cas générés aléatoirement &amp; aide pour trouver l’erreur sur l’objet le plus simple</li>
+</ul>
+</div>
+<div class="incremental">
+<ul>
+<li><em>finite state machine generative testing</em> : chercher des erreurs sur le déroulement des actions entre différents agents indépendants</li>
+</ul>
+</div>
+<div class="incremental">
+<ul>
+<li><strong>preuves</strong>: chercher des erreur sur <strong>TOUTES</strong> les entrées possibles possible à l’aide du système de typage</li>
+</ul>
+</div>
+<h1 id="premiers-pas-en-haskell">Premiers Pas en Haskell</h1>
+<h3 id="hello-world-13">Hello World! (1/3)</h3>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span>
+
+<span class="ot">main ::</span> <span class="dt">IO</span> ()
+main <span class="fu">=</span> putStrLn <span class="st">&quot;Hello World!&quot;</span></code></pre></div>
+<p><a href="~/.deft/pres-haskell/hello.hs">file:~/.deft/pres-haskell/hello.hs</a></p>
+<h3 id="hello-world-23">Hello World! (2/3)</h3>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span>
+
+<span class="ot">main ::</span> <span class="dt">IO</span> ()
+main <span class="fu">=</span> putStrLn <span class="st">&quot;Hello World!&quot;</span></code></pre></div>
+<ul>
+<li><code>::</code> de type ;</li>
+<li><code>=</code> égalité (la vrai, on peut interchanger ce qu’il y a des deux cotés) ;</li>
+<li>le type de <code>putStrLn</code> est <code>String -&gt; IO ()</code> ;</li>
+<li>le type de <code>main</code> est <code>IO ()</code>.</li>
+</ul>
+<h3 id="hello-world-33">Hello World! (3/3)</h3>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span>
+
+<span class="ot">main ::</span> <span class="dt">IO</span> ()
+main <span class="fu">=</span> putStrLn <span class="st">&quot;Hello World!&quot;</span></code></pre></div>
+<ul>
+<li>Le type <code>IO a</code> signifie: C’est une description d’une procédure qui quand elle est évaluée peut faire des actions d’IO et finalement retourne une valeur de type <code>a</code> ;</li>
+<li><code>main</code> est le nom du point d’entrée du programme ;</li>
+<li>Haskell runtime va chercher pour <code>main</code> et l’exécute.</li>
+</ul>
+<h2 id="what-is-your-name">What is your name?</h2>
+<h3 id="what-is-your-name-13">What is your name? (1/3)</h3>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span>
+
+<span class="ot">main ::</span> <span class="dt">IO</span> ()
+main <span class="fu">=</span> <span class="kw">do</span>
+  putStrLn <span class="st">&quot;Hello! What is your name?&quot;</span>
+  name <span class="ot">&lt;-</span> getLine
+  <span class="kw">let</span> output <span class="fu">=</span> <span class="st">&quot;Nice to meet you, &quot;</span> <span class="fu">++</span> name <span class="fu">++</span> <span class="st">&quot;!&quot;</span>
+  putStrLn output</code></pre></div>
+<p><a href="file:pres-haskell/name.hs" class="uri">file:pres-haskell/name.hs</a></p>
+<h3 id="what-is-your-name-23">What is your name? (2/3)</h3>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span>
+
+<span class="ot">main ::</span> <span class="dt">IO</span> ()
+main <span class="fu">=</span> <span class="kw">do</span>
+  putStrLn <span class="st">&quot;Hello! What is your name?&quot;</span>
+  name <span class="ot">&lt;-</span> getLine
+  <span class="kw">let</span> output <span class="fu">=</span> <span class="st">&quot;Nice to meet you, &quot;</span> <span class="fu">++</span> name <span class="fu">++</span> <span class="st">&quot;!&quot;</span>
+  putStrLn output</code></pre></div>
+<ul>
+<li>l’indentation est importante !</li>
+<li><code>do</code> commence une syntaxe spéciale qui permet de séquencer des actions <code>IO</code> ;</li>
+<li>le type de <code>getLine</code> est <code>IO String</code> ;</li>
+<li><code>IO String</code> signifie: Ceci est la description d’une procédure qui lorsqu’elle est évaluée peut faire des actions IO et à la fin retourne une valeur de type <code>String</code>.</li>
+</ul>
+<h3 id="what-is-your-name-33">What is your name? (3/3)</h3>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span>
+
+<span class="ot">main ::</span> <span class="dt">IO</span> ()
+main <span class="fu">=</span> <span class="kw">do</span>
+  putStrLn <span class="st">&quot;Hello! What is your name?&quot;</span>
+  name <span class="ot">&lt;-</span> getLine
+  <span class="kw">let</span> output <span class="fu">=</span> <span class="st">&quot;Nice to meet you, &quot;</span> <span class="fu">++</span> name <span class="fu">++</span> <span class="st">&quot;!&quot;</span>
+  putStrLn output</code></pre></div>
+<ul>
+<li>le type de <code>getLine</code> est <code>IO String</code></li>
+<li>le type de <code>name</code> est <code>String</code></li>
+<li><code>&lt;-</code> est une syntaxe spéciale qui n’apparait que dans la notation <code>do</code></li>
+<li><code>&lt;-</code> signifie: évalue la procédure et attache la valeur renvoyée dans le nom à gauche de <code>&lt;-</code></li>
+<li><code>let &lt;name&gt; = &lt;expr&gt;</code> signifie que <code>name</code> est interchangeable avec <code>expr</code> pour le reste du bloc <code>do</code>.</li>
+<li>dans un bloc <code>do</code>, <code>let</code> n’a pas besoin d’être accompagné par <code>in</code> à la fin.</li>
+</ul>
+<h2 id="erreurs-classiques">Erreurs classiques</h2>
+<h3 id="erreur-classique-1">Erreur classique #1</h3>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span>
+
+<span class="ot">main ::</span> <span class="dt">IO</span> ()
+main <span class="fu">=</span> <span class="kw">do</span>
+  putStrLn <span class="st">&quot;Hello! What is your name?&quot;</span>
+  <span class="kw">let</span> output <span class="fu">=</span> <span class="st">&quot;Nice to meet you, &quot;</span> <span class="fu">++</span> getLine <span class="fu">++</span> <span class="st">&quot;!&quot;</span>
+  putStrLn output</code></pre></div>
+<pre><code>/Users/yaesposi/.deft/pres-haskell/name.hs:6:40: warning: [-Wdeferred-type-errors]
+    • Couldn&#39;t match expected type ‘[Char]’
+                  with actual type ‘IO String’
+    • In the first argument of ‘(++)’, namely ‘getLine’
+      In the second argument of ‘(++)’, namely ‘getLine ++ &quot;!&quot;’
+      In the expression: &quot;Nice to meet you, &quot; ++ getLine ++ &quot;!&quot;
+  |
+6 |   let output = &quot;Nice to meet you, &quot; ++ getLine ++ &quot;!&quot;
+  |                                        ^^^^^^^
+Ok, one module loaded.
+</code></pre>
+<h3 id="erreur-classique-1-1">Erreur classique #1</h3>
+<ul>
+<li><code>String</code> est <code>[Char]</code></li>
+<li>Haskell n’arrive pas à faire matcher le type <code>String</code> avec <code>IO String</code>.</li>
+<li><code>IO a</code> et <code>a</code> sont différents</li>
+</ul>
+<h3 id="erreur-classique-2">Erreur classique #2</h3>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span>
+
+<span class="ot">main ::</span> <span class="dt">IO</span> ()
+main <span class="fu">=</span> <span class="kw">do</span>
+  putStrLn <span class="st">&quot;Hello! What is your name?&quot;</span>
+  name <span class="ot">&lt;-</span> getLine
+  putStrLn  <span class="st">&quot;Nice to meet you, &quot;</span> <span class="fu">++</span> name <span class="fu">++</span> <span class="st">&quot;!&quot;</span></code></pre></div>
+<pre><code>/Users/yaesposi/.deft/pres-haskell/name.hs:7:3: warning: [-Wdeferred-type-errors]
+    • Couldn&#39;t match expected type ‘[Char]’ with actual type ‘IO ()’
+    • In the first argument of ‘(++)’, namely
+        ‘putStrLn &quot;Nice to meet you, &quot;’
+      In a stmt of a &#39;do&#39; block:
+        putStrLn &quot;Nice to meet you, &quot; ++ name ++ &quot;!&quot;
+      In the expression:
+        do putStrLn &quot;Hello! What is your name?&quot;
+           name &lt;- getLine
+           putStrLn &quot;Nice to meet you, &quot; ++ name ++ &quot;!&quot;
+  |
+7 |   putStrLn &quot;Nice to meet you, &quot; ++ name ++ &quot;!&quot;
+</code></pre>
+<h3 id="erreur-classique-2-fix">Erreur classique #2 (fix)</h3>
+<ul>
+<li>Des parenthèses sont nécessaires</li>
+<li>L’application de fonction se fait de gauche à droite</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span>
+
+<span class="ot">main ::</span> <span class="dt">IO</span> ()
+main <span class="fu">=</span> <span class="kw">do</span>
+  putStrLn <span class="st">&quot;Hello! What is your name?&quot;</span>
+  name <span class="ot">&lt;-</span> getLine
+  putStrLn (<span class="st">&quot;Nice to meet you, &quot;</span> <span class="fu">++</span> name <span class="fu">++</span> <span class="st">&quot;!&quot;</span>)</code></pre></div>
+<h1 id="concepts-avec-exemples">Concepts avec exemples</h1>
+<h3 id="concepts">Concepts</h3>
+<ul>
+<li><em>pureté</em> (par défaut)</li>
+<li><em>evaluation paraisseuse</em> (par défaut)</li>
+<li><em>ADT &amp; typage polymorphique</em></li>
+</ul>
+<h3 id="pureté-function-vs-proceduresubroutines"><em>Pureté</em>: Function vs Procedure/Subroutines</h3>
+<ul>
+<li>Une <em>fonction</em> n’a pas d’effet de bord</li>
+<li>Une <em>Procedure</em> ou <em>subroutine</em> but engendrer des effets de bords lors de son évaluation</li>
+</ul>
+<h3 id="pureté-function-vs-proceduresubroutines-exemple"><em>Pureté</em>: Function vs Procedure/Subroutines (exemple)</h3>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">dist ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span>
+dist x y <span class="fu">=</span> sqrt (x<span class="fu">**</span><span class="dv">2</span> <span class="fu">+</span> y<span class="fu">**</span><span class="dv">2</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">getName ::</span> <span class="dt">IO</span> <span class="dt">String</span>
+getName <span class="fu">=</span> readLine</code></pre></div>
+<ul>
+<li><strong>IO a</strong> ⇒ <strong>IMPUR</strong> ; effets de bords hors evaluation :
+<ul>
+<li>lire un fichier ;</li>
+<li>écrire sur le terminal ;</li>
+<li>changer la valeur d’une variable en RAM est impur.</li>
+</ul></li>
+</ul>
+<h3 id="pureté-gain-paralellisation-gratuite"><em>Pureté</em>: Gain, paralellisation gratuite</h3>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">import </span><span class="dt">Foreign.Lib</span> (f)
+<span class="co">--  f :: Int -&gt; Int</span>
+<span class="co">--  f = ???</span>
+
+foo <span class="fu">=</span> sum results
+  <span class="kw">where</span> results <span class="fu">=</span> map f [<span class="dv">1</span><span class="fu">..</span><span class="dv">100</span>]</code></pre></div>
+<div class="incremental">
+<p><strong><code>fmap</code> FTW!!!!! Assurance d’avoir le même résultat avec 32 cœurs</strong></p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">import </span><span class="dt">Foreign.Lib</span> (f)
+<span class="co">--  f :: Int -&gt; Int</span>
+<span class="co">--  f = ???</span>
+
+foo <span class="fu">=</span> sum results
+  <span class="kw">where</span> results <span class="fu">=</span> fmap f [<span class="dv">1</span><span class="fu">..</span><span class="dv">100</span>]</code></pre></div>
+</div>
+<h3 id="pureté-structures-de-données-immuable"><em>Pureté</em>: Structures de données immuable</h3>
+<p>Purely functional data structures, <em>Chris Okasaki</em></p>
+<p>Thèse en 1996, et un livre.</p>
+<p>Opérations sur les listes, tableaux, arbres de complexité amortie equivalent ou proche (pire des cas facteur log(n)) de celle des structures de données muables.</p>
+<h3 id="évaluation-parraisseuse-stratégies-dévaluations"><em>Évaluation parraisseuse</em>: Stratégies d’évaluations</h3>
+<p><code>(h (f a) (g b))</code> peut s’évaluer:</p>
+<ul>
+<li><code>a</code> → <code>(f a)</code> → <code>b</code> → <code>(g b)</code> → <code>(h (f a) (g b))</code></li>
+<li><code>b</code> → <code>a</code> → <code>(g b)</code> → <code>(f a)</code> → <code>(h (f a) (g b))</code></li>
+<li><code>a</code> et <code>b</code> en parallèle puis <code>(f a)</code> et <code>(g b)</code> en parallèle et finallement <code>(h (f a) (g b))</code></li>
+<li><code>h</code> → <code>(f a)</code> seulement si nécessaire et puis <code>(g b)</code> seulement si nécessaire</li>
+</ul>
+<p>Par exemple: <code>(def h (λx.λy.(+ x x)))</code> il n’est pas nécessaire d’évaluer <code>y</code>, dans notre cas <code>(g b)</code></p>
+<h3 id="évaluation-parraisseuse-exemple-1"><em>Évaluation parraisseuse</em>: Exemple 1</h3>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">quickSort [] <span class="fu">=</span> []
+quickSort (x<span class="fu">:</span>xs) <span class="fu">=</span> quickSort (filter (<span class="fu">&lt;</span>x) xs)
+                   <span class="fu">++</span> [x]
+                   <span class="fu">++</span> quickSort (filter (<span class="fu">&gt;=</span>x) xs)
+
+minimum list <span class="fu">=</span> head (quickSort list)</code></pre></div>
+<p>Un appel à <code>minimum longList</code> ne vas pas ordonner toute la liste. Le travail s’arrêtera dès que le premier élément de la liste ordonnée sera trouvé.</p>
+<p><code>take k (quickSort list)</code> est en <code>O(n + k log k)</code> où <code>n = length list</code>. Alors qu’avec une évaluation stricte: <code>O(n log n)</code>.</p>
+<h3 id="évaluation-parraisseuse-structures-de-données-infinies-zip"><em>Évaluation parraisseuse</em>: Structures de données infinies (zip)</h3>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">zip<span class="ot"> ::</span> [a] <span class="ot">-&gt;</span> [b] <span class="ot">-&gt;</span> [(a,b)]
+zip [] _  <span class="fu">=</span> []
+zip _  [] <span class="fu">=</span> []
+zip (x<span class="fu">:</span>xs) (y<span class="fu">:</span>ys) <span class="fu">=</span> (x,y)<span class="fu">:</span>zip xs ys</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">zip [<span class="dv">1</span><span class="fu">..</span>] [<span class="ch">&#39;a&#39;</span>,<span class="ch">&#39;b&#39;</span>,<span class="ch">&#39;c&#39;</span>]</code></pre></div>
+<p>s’arrête et renvoie :</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">[(<span class="dv">1</span>,<span class="ch">&#39;a&#39;</span>), (<span class="dv">2</span>,<span class="ch">&#39;b&#39;</span>), (<span class="dv">3</span>, <span class="ch">&#39;c&#39;</span>)]</code></pre></div>
+<h3 id="adt-typage-polymorphique"><em>ADT &amp; Typage polymorphique</em></h3>
+<p>Algebraic Data Types.</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Void</span> <span class="fu">=</span> <span class="dt">Void</span> <span class="dt">Void</span> <span class="co">-- 0 valeur possible!</span>
+<span class="kw">data</span> <span class="dt">Unit</span> <span class="fu">=</span> ()        <span class="co">-- 1 seule valeur possible</span>
+
+<span class="kw">data</span> <span class="dt">Product</span> x y <span class="fu">=</span> <span class="dt">P</span> x y
+<span class="kw">data</span> <span class="dt">Sum</span> x y <span class="fu">=</span> <span class="dt">S1</span> x <span class="fu">|</span> <span class="dt">S2</span> y</code></pre></div>
+<p>Soit <code>#x</code> le nombre de valeurs possibles pour le type <code>x</code> alors:</p>
+<ul>
+<li><code>#(Product x y) = #x * #y</code></li>
+<li><code>#(Sum x y)     = #x + #y</code></li>
+</ul>
+<h3 id="adt-typage-polymorphique-inférence-de-type"><em>ADT &amp; Typage polymorphique</em>: Inférence de type</h3>
+<p>À partir de :</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">zip [] _  <span class="fu">=</span> []
+zip _  [] <span class="fu">=</span> []
+zip (x<span class="fu">:</span>xs) (y<span class="fu">:</span>ys) <span class="fu">=</span> (x,y)<span class="fu">:</span>zip xs ys</code></pre></div>
+<p>le compilateur peut déduire:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">zip<span class="ot"> ::</span> [a] <span class="ot">-&gt;</span> [b] <span class="ot">-&gt;</span> [(a,b)]</code></pre></div>
+<h2 id="composabilité">Composabilité</h2>
+<h3 id="composabilité-vs-modularité">Composabilité vs Modularité</h3>
+<p>Modularité: soit un <code>a</code> et un <code>b</code>, je peux faire un <code>c</code>. ex: x un graphique, y une barre de menu =&gt; une page <code>let page = mkPage ( graphique, menu )</code></p>
+<p>Composabilité: soit deux <code>a</code> je peux faire un autre <code>a</code>. ex: x un widget, y un widget =&gt; un widget <code>let page = x &lt;+&gt; y</code></p>
+<p>Gain d’abstraction, moindre coût.</p>
+<p><strong>Hypothèses fortes sur les <code>a</code></strong></p>
+<h3 id="exemples">Exemples</h3>
+<ul>
+<li><strong>Semi-groupes</strong> 〈+〉</li>
+<li><p><strong>Monoides</strong> 〈0,+〉</p></li>
+<li><strong>Catégories</strong> 〈obj(C),hom(C),∘〉</li>
+<li>Foncteurs <code>fmap</code> (<code>(&lt;$&gt;)</code>)</li>
+<li>Foncteurs Applicatifs <code>ap</code> (<code>(&lt;*&gt;)</code>)</li>
+<li>Monades <code>join</code></li>
+<li>Traversables <code>map</code></li>
+<li><p>Foldables <code>reduce</code></p></li>
+</ul>
+<h1 id="catégories-de-bugs-évités-avec-haskell">Catégories de bugs évités avec Haskell</h1>
+<h3 id="real-productions-bugs">Real Productions Bugs™</h3>
+<p>Bug vu des dizaines de fois en prod malgré:</p>
+<ol>
+<li>specifications fonctionnelles</li>
+<li>spécifications techniques</li>
+<li>tests unitaires</li>
+<li>3 envs, dev, recette/staging/pre-prod, prod</li>
+<li>Équipe de QA qui teste en recette</li>
+</ol>
+<p>Solutions simples.</p>
+<h3 id="null-pointer-exception-erreur-classique-1">Null Pointer Exception: Erreur classique (1)</h3>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript">int <span class="at">foo</span>( x ) <span class="op">{</span>
+  <span class="cf">return</span> x <span class="op">+</span> <span class="dv">1</span><span class="op">;</span>
+<span class="op">}</span></code></pre></div>
+<h3 id="null-pointer-exception-erreur-classique-2">Null Pointer Exception: Erreur classique (2)</h3>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript">int <span class="at">foo</span>( x ) <span class="op">{</span>
+  ...
+  <span class="kw">var</span> y <span class="op">=</span> <span class="at">do_shit_1</span>(x)<span class="op">;</span>
+  ...
+  <span class="cf">return</span> <span class="at">do_shit_20</span>(x)
+<span class="op">}</span>
+...
+<span class="kw">var</span> val <span class="op">=</span> <span class="at">foo</span>(<span class="dv">26</span>/<span class="dv">2334</span> <span class="op">-</span> <span class="va">Math</span>.<span class="at">sqrt</span>(<span class="dv">2</span>))<span class="op">;</span></code></pre></div>
+<div class="incremental">
+<pre><code>888888b.    .d88888b.  888     888 888b     d888 888 888 888 888 888 
+888  &quot;88b  d88P&quot; &quot;Y88b 888     888 8888b   d8888 888 888 888 888 888 
+888  .88P  888     888 888     888 88888b.d88888 888 888 888 888 888 
+8888888K.  888     888 888     888 888Y88888P888 888 888 888 888 888 
+888  &quot;Y88b 888     888 888     888 888 Y888P 888 888 888 888 888 888 
+888    888 888     888 888     888 888  Y8P  888 Y8P Y8P Y8P Y8P Y8P 
+888   d88P Y88b. .d88P Y88b. .d88P 888   &quot;   888  &quot;   &quot;   &quot;   &quot;   &quot;  
+8888888P&quot;   &quot;Y88888P&quot;   &quot;Y88888P&quot;  888       888 888 888 888 888 888 
+</code></pre>
+<p><strong>Null Pointer Exception</strong></p>
+</div>
+<h3 id="null-pointer-exception-data-type-maybe">Null Pointer Exception: Data type <code>Maybe</code></h3>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Maybe</span> a <span class="fu">=</span> <span class="dt">Just</span> a <span class="fu">|</span> <span class="dt">Nothing</span>
+<span class="fu">...</span>
+<span class="ot">foo ::</span> <span class="dt">Maybe</span> a
+<span class="fu">...</span>
+myFunc x <span class="fu">=</span> <span class="kw">let</span> t <span class="fu">=</span> foo x <span class="kw">in</span>
+  <span class="kw">case</span> t <span class="kw">of</span>
+    <span class="dt">Just</span> someValue <span class="ot">-&gt;</span> doThingsWith someValue
+    <span class="dt">Nothing</span> <span class="ot">-&gt;</span> doThingWhenNothingIsReturned</code></pre></div>
+<p>Le compilateur oblige à tenir compte des cas particuliers! Impossible d’oublier.</p>
+<h3 id="null-pointer-excepton-etat">Null Pointer Excepton: Etat</h3>
+<ul>
+<li>Rendre impossibe de fabriquer un état qui devrait être impossible d’avoir.</li>
+<li>Pour aller plus loin voir, FRP, CQRS/ES, Elm-architecture, etc…</li>
+</ul>
+<h3 id="erreur-due-à-une-typo">Erreur due à une typo</h3>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Foo</span> x <span class="fu">=</span> <span class="dt">LongNameWithPossibleError</span> x
+<span class="fu">...</span>
+foo (<span class="dt">LongNameWithPosibleError</span> x) <span class="fu">=</span> <span class="fu">...</span></code></pre></div>
+<p><strong>Erreur à la compilation</strong>: Le nom d’un champ n’est pas une string (voir les objets JSON).</p>
+<h3 id="echange-de-parameters">Echange de parameters</h3>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Personne</span> <span class="fu">=</span> <span class="dt">Personne</span> {<span class="ot"> uid ::</span> <span class="dt">Int</span>,<span class="ot"> age ::</span> <span class="dt">Int</span> }
+<span class="ot">foo ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Personne</span> <span class="co">-- ??? uid ou age?</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">newtype</span> <span class="dt">UID</span> <span class="fu">=</span> <span class="dt">UID</span> <span class="dt">Int</span> <span class="kw">deriving</span> (<span class="dt">Eq</span>)
+<span class="kw">data</span> <span class="dt">Personne</span> <span class="fu">=</span> <span class="dt">Personne</span> {<span class="ot"> uid ::</span> <span class="dt">UID</span>,<span class="ot"> age ::</span> <span class="dt">Int</span> }
+<span class="ot">foo ::</span> <span class="dt">UDI</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Personne</span> <span class="co">-- Impossible de confondre</span></code></pre></div>
+<h3 id="changement-intempestif-dun-etat-global">Changement intempestif d’un Etat Global</h3>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">foo ::</span> <span class="dt">GlobalState</span> <span class="ot">-&gt;</span> x</code></pre></div>
+<p><strong><code>foo</code> ne peut pas changer <code>GlobalState</code></strong></p>
+<h1 id="organisation-du-code">Organisation du Code</h1>
+<h3 id="grands-concepts">Grands Concepts</h3>
+<p>Procedure vs Functions:</p>
+<table>
+<tbody>
+<tr class="odd">
+<td>Gestion d’une configuration globale</td>
+</tr>
+<tr class="even">
+<td>Gestion d’un état global</td>
+</tr>
+<tr class="odd">
+<td>Gestion des Erreurs</td>
+</tr>
+<tr class="even">
+<td>Gestion des IO</td>
+</tr>
+</tbody>
+</table>
+<h3 id="monades">Monades</h3>
+<p>Pour chacun de ces <em>problèmes</em> il existe une monade:</p>
+<table>
+<tbody>
+<tr class="odd">
+<td>Gestion d’une configuration globale</td>
+<td><code>Reader</code></td>
+</tr>
+<tr class="even">
+<td>Gestion d’un état global</td>
+<td><code>State</code></td>
+</tr>
+<tr class="odd">
+<td>Gestion des Erreurs</td>
+<td><code>Either</code></td>
+</tr>
+<tr class="even">
+<td>Gestion des IO</td>
+<td><code>IO</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="effets">Effets</h3>
+<p>Gestion de plusieurs Effets dans la même fonction:</p>
+<ul>
+<li>MTL</li>
+<li>Free Monad</li>
+<li>Freer Monad</li>
+</ul>
+<p>Idée: donner à certaines sous-fonction accès à une partie des effets seulement.</p>
+<p>Par exemple:</p>
+<ul>
+<li>limiter une fonction à la lecture de la DB mais pas l’écriture.</li>
+<li>limiter l’écriture à une seule table</li>
+<li>interdire l’écriture de logs</li>
+<li>interdire l’écriture sur le disque dur</li>
+<li>etc…</li>
+</ul>
+<h3 id="exemple-dans-un-code-réel-1">Exemple dans un code réel (1)</h3>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="co">-- | ConsumerBot type, the main monad in which the bot code is written with.</span>
+<span class="co">-- Provide config, state, logs and IO</span>
+<span class="kw">type</span> <span class="dt">ConsumerBot</span> m a <span class="fu">=</span>
+  ( <span class="dt">MonadState</span> <span class="dt">ConsumerState</span> m
+  , <span class="dt">MonadReader</span> <span class="dt">ConsumerConf</span> m
+  , <span class="dt">MonadLog</span> (<span class="dt">WithSeverity</span> <span class="dt">Doc</span>) m
+  , <span class="dt">MonadBaseControl</span> <span class="dt">IO</span> m
+  , <span class="dt">MonadSleep</span> m
+  , <span class="dt">MonadPubSub</span> m
+  , <span class="dt">MonadIO</span> m
+  ) <span class="ot">=&gt;</span> m a</code></pre></div>
+<h3 id="exemple-dans-un-code-réel-2">Exemple dans un code réel (2)</h3>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">bot ::</span> <span class="dt">Manager</span>
+    <span class="ot">-&gt;</span> <span class="dt">RotatingLog</span>
+    <span class="ot">-&gt;</span> <span class="dt">Chan</span> <span class="dt">RedditComment</span>
+    <span class="ot">-&gt;</span> <span class="dt">TVar</span> <span class="dt">RedbotConfs</span>
+    <span class="ot">-&gt;</span> <span class="dt">Severity</span>
+    <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
+bot manager rotLog pubsub redbots minSeverity <span class="fu">=</span> <span class="kw">do</span>
+  TC.setDefaultPersist TC.filePersist
+  <span class="kw">let</span> conf <span class="fu">=</span> <span class="dt">ConsumerConf</span>
+             { rhconf <span class="fu">=</span> <span class="dt">RedditHttpConf</span> { _connMgr <span class="fu">=</span> manager }
+             , commentStream <span class="fu">=</span> pubsub
+             }
+  void <span class="fu">$</span> autobot
+       <span class="fu">&amp;</span> flip runReaderT conf
+       <span class="fu">&amp;</span> flip runStateT (initState redbots)
+       <span class="fu">&amp;</span> flip runLoggingT (renderLog minSeverity rotLog)</code></pre></div>
+<h2 id="règles-pragmatiques">Règles <strong>pragmatiques</strong></h2>
+<h3 id="organisation-en-fonction-de-la-complexité">Organisation en fonction de la complexité</h3>
+<blockquote>
+<p>Make it work, make it right, make it fast</p>
+</blockquote>
+<ul>
+<li>Simple: directement IO (YOLO!)</li>
+<li>Medium: Haskell Design Patterns: The Handle Pattern: <a href="https://jaspervdj.be/posts/2018-03-08-handle-pattern.html" class="uri">https://jaspervdj.be/posts/2018-03-08-handle-pattern.html</a></li>
+<li>Medium (bis): MTL / Free / Freeer / Effects…</li>
+<li>Gros: Three Layer Haskell Cake: <a href="http://www.parsonsmatt.org/2018/03/22/three_layer_haskell_cake.html" class="uri">http://www.parsonsmatt.org/2018/03/22/three_layer_haskell_cake.html</a>
+<ul>
+<li>Layer 1: Imperatif</li>
+<li>Orienté Objet (Level 2 / 2’)</li>
+<li>Fonctionnel</li>
+</ul></li>
+</ul>
+<h3 id="couches">3 couches</h3>
+<ul>
+<li><strong>Imperatif</strong>: ReaderT IO
+<ul>
+<li>Insérer l’état dans une <code>TVar</code>, <code>MVar</code> ou <code>IORef</code> (concurrence)</li>
+</ul></li>
+<li><strong>Orienté Objet</strong>:
+<ul>
+<li>Handle / MTL / Free…</li>
+<li>donner des access <code>UserDB</code>, <code>AccessTime</code>, <code>APIHTTP</code>…</li>
+</ul></li>
+<li><strong>Fonctionnel</strong>: Business Logic <code>f : Handlers -&gt; Inputs -&gt; Command</code></li>
+</ul>
+<h3 id="services-lib">Services / Lib</h3>
+<p>Service: <code>init</code> / <code>start</code> / <code>close</code> + methodes… Lib: methodes sans état interne.</p>
+<h1 id="conclusion">Conclusion</h1>
+<h3 id="pourquoi-haskell-1">Pourquoi Haskell?</h3>
+<ul>
+<li>avantage compétitif: qualité x productivité hors norme</li>
+<li>changera son approche de la programmation</li>
+<li>les concepts appris sont utilisables dans tous les languages</li>
+<li>permet d’aller là où aucun autre langage ne peut vous amener</li>
+<li>Approfondissement sans fin:
+<ul>
+<li>Théorie: théorie des catégories, théorie des types homotopiques, etc…</li>
+<li>Optim: compilateur</li>
+<li>Qualité: tests, preuves</li>
+<li>Organisation: capacité de contraindre de très haut vers très bas</li>
+</ul></li>
+</ul>
+<h3 id="avantage-compétitif">Avantage compétitif</h3>
+<ul>
+<li>France, Europe du sud &amp; Functional Programming</li>
+<li>Maintenance &gt;&gt; production d’un nouveau produit</li>
+<li>Coût de la refactorisation</li>
+<li>“Make it work, Make it right, Make it fast” moins cher.</li>
+</ul>
+<h1 id="appendix">Appendix</h1>
+<h3 id="stm-exemple-concurrence-12">STM: Exemple (Concurrence) (1/2)</h3>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">class</span> Account {
+  <span class="dt">float</span> balance;
+  <span class="kw">synchronized</span> <span class="dt">void</span> <span class="fu">deposit</span>(<span class="dt">float</span> amount){
+    balance += amount; }
+  <span class="kw">synchronized</span> <span class="dt">void</span> <span class="fu">withdraw</span>(<span class="dt">float</span> amount){
+    <span class="kw">if</span> (balance &lt; amount) <span class="kw">throw</span> <span class="kw">new</span> <span class="fu">OutOfMoneyError</span>();
+    balance -= amount; }
+  <span class="kw">synchronized</span> <span class="dt">void</span> <span class="fu">transfert</span>(Account other, <span class="dt">float</span> amount){
+    other.<span class="fu">withdraw</span>(amount);
+    <span class="kw">this</span>.<span class="fu">deposit</span>(amount); }
+}</code></pre></div>
+<p>Situation d’interblocage typique. (A transfert vers B et B vers A).</p>
+<h3 id="stm-exemple-concurrence-22">STM: Exemple (Concurrence) (2/2)</h3>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">deposit ::</span> <span class="dt">TVar</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">STM</span> ()
+deposit acc n <span class="fu">=</span> <span class="kw">do</span>
+  bal <span class="ot">&lt;-</span> readTVar acc
+  writeTVar acc (bal <span class="fu">+</span> n)
+<span class="ot">withdraw ::</span> <span class="dt">TVar</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">STM</span> ()
+withdraw acc n <span class="fu">=</span> <span class="kw">do</span>
+  bal <span class="ot">&lt;-</span> readTVar acc
+  <span class="kw">if</span> bal <span class="fu">&lt;</span> n <span class="kw">then</span> retry
+  writeTVar acc (bal <span class="fu">-</span> n)
+<span class="ot">transfer ::</span> <span class="dt">TVar</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">TVar</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">STM</span> ()
+transfer from to n <span class="fu">=</span> <span class="kw">do</span>
+  withdraw from n
+  deposit to n</code></pre></div>
+<ul>
+<li>pas de lock explicite, composition naturelle dans <code>transfer</code>.</li>
+<li>si une des deux opération échoue toute la transaction échoue</li>
+<li>le système de type force cette opération a être atomique: <code>atomically :: STM a -&gt; IO a</code></li>
+</ul>
+<div id="footer">
+  <a href="http://yannesposito.com">yannesposito.com</a>
+  —
+  Proudly generated by <a href="http://github.com/yogsototh/mkdocs">mkdocs</a>
+</div>
+</body>
+</html>
