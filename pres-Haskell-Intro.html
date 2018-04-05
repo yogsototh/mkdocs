@@ -549,13 +549,13 @@ getName <span class="fu">=</span> readLine</code></pre></div>
 foo <span class="fu">=</span> sum results
   <span class="kw">where</span> results <span class="fu">=</span> map f [<span class="dv">1</span><span class="fu">..</span><span class="dv">100</span>]</code></pre></div>
 <div class="incremental">
-<p><strong><code>fmap</code> FTW!!!!! Assurance d’avoir le même résultat avec 32 cœurs</strong></p>
+<p><strong><code>pmap</code> FTW!!!!! Assurance d’avoir le même résultat avec 32 cœurs</strong></p>
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">import </span><span class="dt">Foreign.Lib</span> (f)
 <span class="co">--  f :: Int -&gt; Int</span>
 <span class="co">--  f = ???</span>
 
 foo <span class="fu">=</span> sum results
-  <span class="kw">where</span> results <span class="fu">=</span> fmap f [<span class="dv">1</span><span class="fu">..</span><span class="dv">100</span>]</code></pre></div>
+  <span class="kw">where</span> results <span class="fu">=</span> pmap f [<span class="dv">1</span><span class="fu">..</span><span class="dv">100</span>]</code></pre></div>
 </div>
 <h3 id="pureté-structures-de-données-immuable"><em>Pureté</em>: Structures de données immuable</h3>
 <p>Purely functional data structures, <em>Chris Okasaki</em></p>

@@ -440,7 +440,7 @@ foo = sum results
 
 . . .
 
-*~fmap~ FTW!!!!! Assurance d'avoir le même résultat avec 32 cœurs*
+*~pmap~ FTW!!!!! Assurance d'avoir le même résultat avec 32 cœurs*
 
 #+BEGIN_SRC haskell
 import Foreign.Lib (f)
@@ -448,7 +448,7 @@ import Foreign.Lib (f)
 --  f = ???
 
 foo = sum results
-  where results = fmap f [1..100]
+  where results = pmap f [1..100]
 #+END_SRC
 
 *** /Pureté/: Structures de données immuable
