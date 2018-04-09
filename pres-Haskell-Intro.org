@@ -804,6 +804,17 @@ Lib: methodes sans état interne.
 - Coût de la refactorisation
 - "Make it work, Make it right, Make it fast" moins cher.
 
+*** Pour la suite
+
+A chacun de choisir, livres, tutoriels, videos, chat, etc...
+
+- Voici une liste de resources : https://www.haskell.org/documentation
+- Mon tuto rapide : [[http://yannesposito.com/Scratch/en/blog/Haskell-the-Hard-Way/][Haskell the Hard Way]]
+- Moteurs de recherche par type : [[http://hayoo.fh-wedel.de][hayoo]] & [[http://haskell.org/hoogle][hoogle]]
+- Communauté & News : http://haskell.org/news & ~#haskell-fr~ sur freenode
+- Libs: https://hackage.haskell.org & https://stackage.org
+
+
 * Appendix
 *** STM: Exemple (Concurrence) (1/2)
 
