@@ -12,12 +12,12 @@ import           Turtle
 import Data.Maybe (isJust,fromJust)
 import qualified System.IO as System
 
--- Command Line Options
+-- | Command Line Options
 data Options =
-  Options { web    :: Bool
-          , reveal :: Bool
-          , pdf    :: Bool
-          , beamer :: Bool
+  Options { web    :: Bool -- ^ html document
+          , reveal :: Bool -- ^ reveal.js web presentation
+          , pdf    :: Bool -- ^ pdf document
+          , beamer :: Bool -- ^ beamer pdf presentation
           , debug  :: Bool
           , file   :: Maybe FilePath
           } deriving (Show)
